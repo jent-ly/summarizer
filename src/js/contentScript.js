@@ -9,3 +9,4 @@ function getHTML(){
 }
 
 console.log(getText());
+console.log(getHTML());
