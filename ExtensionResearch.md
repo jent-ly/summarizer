@@ -6,8 +6,8 @@ Extensions are zipped bundles of HTML, CSS, JS, imgs, etc. that customize the Go
 
 Users will interact with a popup from the icon.
 We will eventually need to update the icons.
-- [] design popup content
-- [] update icons
+- [ ] design popup content
+- [ ] update icons
 
 ### Referring to files
 Files can be referred to with an absolute URL `chrome-extension://<extensionID>/<pathToFile>` or relative URL which is the same as the `<pathToFile>`. `<extensionID>` is a unique identifier that the extension system generates for each extension, and can be viewed by going to `chrome://extensions`.
