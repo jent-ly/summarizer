@@ -24,7 +24,7 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
-    "http*://*/*"
+    "*://*/*"
   ],
   "content_scripts": [
     {
