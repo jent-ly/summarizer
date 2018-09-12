@@ -21,12 +21,12 @@ The extension's event handler: listeners for browser events, performs logic
 - browser action can open a popup, always available
 - page action represents actions that can be taken on the current page, can be hidden
 2. Extension UI pages ie. the popup
-- contains HTML pages with JavaSctipt logic
+- contains HTML pages with JavaScript logic
 - communicates with background script to make its icon clickable to users
 3. [Content Scripts](https://developer.chrome.com/extensions/content_scripts)
 - contains JavaScript that executes in the context of the current page
 - *read/modify the DOM of web pages*
-- communicates with extension by exchanges messages and storing values using the storage API
+- communicates with extension by exchanging messages and storing values using the storage API
 4. Options page
 - customization of the extension
 
