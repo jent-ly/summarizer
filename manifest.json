@@ -42,6 +42,17 @@
       "js": [
         "src/inject/inject.js"
       ]
+    },
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "css": [
+        "src/inject/inject.css"
+      ],
+      "js": [
+        "src/js/contentScript.js"
+      ]
     }
   ]
 }
