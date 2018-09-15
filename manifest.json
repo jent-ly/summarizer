@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "manifest_version": 3,
   "description": "TL;DR, this extension gives you a TL;DR!",
-  "homepage_url": "",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
