@@ -4,8 +4,8 @@ getText = () => {
 }
 
 // gets entire html of page
-getHTML = () => {
-  return document.body.outerHTML
+function getHTML(){
+  return document.body.innerHTML
 }
 
 // TODO: replace with milestone 2 implementation
@@ -56,7 +56,75 @@ chrome.storage.sync.get({
       apiCall(items.apiKey).then(response => {
           return response.json();
       }).then(myJson => {
+        highlightText(myJson.sentences);
         displaySummary(myJson.sentences);
+        console.log("SENTENCES");
+        console.log(myJson.sentences);
       });
     });
 });
+
+function findTextInHTML(text, body) {
+    let tag = false;
+    console.log("TEXT");
+    console.log(text);
+    for (let i = 0; i < body.length - text.length + 1; i++) {
+        let body_index = i;
+        let text_index = 0;
+
+        if (body[i] === '<') tag = true;
+        else if (body[i] === '>') tag = false;
+        let saved_tag = tag;
+
+        if (tag) continue;
+        while (text_index < text.length && body_index < body.length) {
+            if (body[body_index] === '<') tag = true;
+
+            if (!tag && body[body_index] !== text[text_index]) break;
+            if (!tag) text_index++;
+
+            if (body[body_index] === '>') tag = false;
+
+            body_index++;
+        }
+        console.log("DONE")
+        if (text_index == text.length) return [i, body_index]
+        tag = saved_tag;
+    }
+    return []
+}
+
+function isalnum(ch) {
+    let code = ch.charCodeAt(0);
+    if ((code > 47 && code < 58) ||
+        (code > 64 && code < 91) ||
+        (code > 86 && code < 123)) {
+            return true;
+    }
+    return false;
+}
+
+function highlightText(sentences) {
+    var html = getHTML();
+    
+    for (let i = 0 ; i < sentences.length ; i++) {
+        let sub_sentences = sentences[i].split('\n')
+        for (let j = 0 ; j < sub_sentences.length ; j++) {
+            let indices = findTextInHTML(sub_sentences[j], html);
+            console.log("INDICES: ");
+            console.log(indices);
+            console.log(html);
+            if (indices.length == 0) {
+                console.log("Unable to find sentence!!");
+                continue;
+            }
+            html = [
+                html.slice(0, indices[0]),
+                "<b>", html.slice(indices[0], indices[1]), "</b>",
+                html.slice(indices[1])
+            ].join('');
+        }
+    }
+    document.body.innerHTML = html;
+}
+
