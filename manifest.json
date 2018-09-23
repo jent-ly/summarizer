@@ -13,7 +13,7 @@
     "page": "src/bg/background.html",
     "persistent": true
   },
-  "options_page": "src/options_custom/index.html",
+  "options_page": "src/options/index.html",
   "page_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "page action demo",
@@ -23,12 +23,13 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
-    "*://*/*"
+    "https://*/*",
+    "storage"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://www.google.com/*"
+        "https://*/*"
       ],
       "css": [
         "src/inject/inject.css"
@@ -36,7 +37,7 @@
     },
     {
       "matches": [
-        "https://www.google.com/*"
+        "https://*/*"
       ],
       "js": [
         "src/inject/inject.js"
@@ -44,7 +45,7 @@
     },
     {
       "matches": [
-        "*://*/*"
+        "https://*/*"
       ],
       "css": [
         "src/inject/inject.css"
