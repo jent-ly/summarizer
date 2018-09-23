@@ -23,13 +23,14 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
-    "https://*/*",
-    "storage"
+    "https://learn.kevintpeng.com/*",
+    "storage",
+    "tabs"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://*/*"
+        "https://learn.kevintpeng.com/*"
       ],
       "css": [
         "src/inject/inject.css"
@@ -37,7 +38,7 @@
     },
     {
       "matches": [
-        "https://*/*"
+        "https://learn.kevintpeng.com/*"
       ],
       "js": [
         "src/inject/inject.js"
@@ -45,7 +46,7 @@
     },
     {
       "matches": [
-        "https://*/*"
+        "https://learn.kevintpeng.com/*"
       ],
       "css": [
         "src/inject/inject.css"
