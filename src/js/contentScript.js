@@ -9,10 +9,17 @@ function getHTML(){
 }
 
 chrome.storage.sync.get(['summaryDomainWhitelist'], function(result) {
-  var whitelist = new Set(result.summaryDomainWhitelist);
+  var whitelist;
+  if (!result) {
+    whitelist = new Set();
+  } else {
+    whitelist = new Set(result.summaryDomainWhitelist);
+  }
   var pageDomain = document.domain;
   if (whitelist.has(pageDomain)) {
     console.log("run on this domain");
     // code here to summarize and change style
+  } else {
+    console.log("don't run here");
   }
 });

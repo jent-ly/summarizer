@@ -10,20 +10,21 @@
   },
   "default_locale": "en",
   "background": {
-    "page": "src/bg/background.html",
-    "persistent": true
+    "scripts": ["src/js/showPageAction.js"],
+    "persistent": false
   },
   "options_page": "src/options_custom/index.html",
   "page_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "page action demo",
-    "default_popup": "src/page_action/page_action.html"
+    "default_popup": "src/page_action/popup.html"
   },
   "permissions": [
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
     "storage",
+    "tabs",
     "*://*/*"
   ],
   "content_scripts": [
