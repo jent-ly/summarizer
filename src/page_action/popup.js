@@ -1,31 +1,39 @@
 var app = chrome.extension.getBackgroundPage();
+var floatTime = 3000;
 
 function addDomain() {
-  chrome.storage.sync.get(['summaryDomainWhitelist'], function(result) {
-    var whitelist;
-    if (!result) {
-      whitelist = new Set();
-    } else {
-      whitelist = new Set(result.summaryDomainWhitelist);
-    }
-    chrome.tabs.getSelected(null,function(tab) {
+  chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
+    var whitelist = new Set(result.summaryDomainWhitelist);
+
+    chrome.tabs.getSelected(null, function(tab) {
       var url = new URL(tab.url)
       whitelist.add(url.hostname);
       chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
-        app.console.log(whitelist);
+        // display success
+        var statusDisplay = document.getElementById('statusDisplay');
+        statusDisplay.textContent = 'Added "' + url.hostname + '". Refresh to see changes.';
+        setTimeout(function() {
+          statusDisplay.textContent = '';
+        }, floatTime);
       });
     });
   });
 }
 
 function removeDomain() {
-  chrome.storage.sync.get(['summaryDomainWhitelist'], function(result) {
+  chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
     var whitelist = new Set(result.summaryDomainWhitelist);
-    chrome.tabs.getSelected(null,function(tab) {
+
+    chrome.tabs.getSelected(null, function(tab) {
       var url = new URL(tab.url)
       whitelist.delete(url.hostname);
       chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
-        app.console.log(whitelist);
+        // display success
+        var statusDisplay = document.getElementById('statusDisplay');
+        statusDisplay.textContent = 'Removed "' + url.hostname + '"';
+        setTimeout(function() {
+          statusDisplay.textContent = '';
+        }, floatTime);
       });
     });
   });

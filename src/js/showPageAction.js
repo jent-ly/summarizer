@@ -4,7 +4,10 @@
 
 // Called when the url of a tab changes.
 function checkForValidUrl(tabId, changeInfo, tab) {
-  chrome.pageAction.show(tabId);
+  var url = new URL(tab.url);
+  if (url.protocol.startsWith("http")) {
+    chrome.pageAction.show(tabId);
+  }
 };
 
 // Listen for any changes to the URL of any tab.
