@@ -23,7 +23,7 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
-    "https://learn.kevintpeng.com/*",
+    "*://learn.kevintpeng.com/*",
     "storage",
     "tabs"
   ],
