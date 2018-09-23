@@ -23,6 +23,7 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
+    "storage",
     "*://*/*"
   ],
   "content_scripts": [
