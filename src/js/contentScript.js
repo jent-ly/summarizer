@@ -34,7 +34,11 @@ chrome.storage.sync.get(['summaryDomainWhitelist'], function(result) {
       }).then(response => {
           return response.json();
       }).then(myJson => {
-          console.log(myJson.sentences);
+        console.log(myJson.sentences);
+        var div = document.createElement('div');
+        div.setAttribute('class', 'summary');
+        div.innerHTML = '<h1>Page Summary</h1><ol><li>' + myJson.sentences.join('</li><li>') + '</li></ol>';
+        document.body.insertBefore(div, document.body.firstChild);
       });
     });
   } else {
