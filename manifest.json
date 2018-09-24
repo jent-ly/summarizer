@@ -13,7 +13,7 @@
     "scripts": ["src/js/showPageAction.js"],
     "persistent": false
   },
-  "options_page": "src/options_custom/index.html",
+  "options_page": "src/options/index.html",
   "page_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "page action demo",
@@ -23,14 +23,14 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
+    "*://*/*",
     "storage",
-    "tabs",
-    "*://*/*"
+    "tabs"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://www.google.com/*"
+        "https://*/*"
       ],
       "css": [
         "src/inject/inject.css"
@@ -38,7 +38,7 @@
     },
     {
       "matches": [
-        "https://www.google.com/*"
+        "https://*/*"
       ],
       "js": [
         "src/inject/inject.js"
@@ -46,7 +46,7 @@
     },
     {
       "matches": [
-        "*://*/*"
+        "https://*/*"
       ],
       "css": [
         "src/inject/inject.css"
