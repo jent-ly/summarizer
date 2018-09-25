@@ -36,18 +36,6 @@ function add_whitelist_row(domain) {
   document.getElementById('whitelist-list').appendChild(row);
 }
 
-// Helper for adjusting table position of resize BEING REAL EXTRA TBH
-function adjust_tables() {
-  var ol = document.getElementById('options-list');
-  var at = document.getElementById('actions-table');
-  var wt = document.getElementById('whitelist-table');
-
-  var aOffset = (ol.offsetWidth-at.offsetWidth)/2;
-  var wOffset = (ol.offsetWidth-wt.offsetWidth)/2;
-  at.style.marginLeft = `${aOffset.toString()}px`;
-  wt.style.marginLeft = `${wOffset.toString()}px`;
-}
-
 // Restores state using the preferences stored in chrome.storage.
 // Specifies default values to use; update when more setable options are added
 function restore_options() {
@@ -66,7 +54,6 @@ function restore_whitelist() {
     for (var domain of whitelist) {
       add_whitelist_row(domain);
     }
-    adjust_tables(); // adjust table positions once whitelist table is populated
   });
 }
 
@@ -130,5 +117,4 @@ function remove_domain(e) {
 document.addEventListener('DOMContentLoaded', load_options);
 document.getElementById('save').addEventListener('click', save_options);
 document.getElementById('add').addEventListener('click', add_domain);
-window.addEventListener('resize', adjust_tables, true);
 

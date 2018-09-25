@@ -1,74 +1,78 @@
 .banner {
-  margin-top: 2em;
-  margin-bottom: 5em;
+  margin-top:       2em;
+  margin-bottom:    5em;
 }
 
 .title {
-  text-align: center;
-  font-size: 4em;
-  font-family: "Courier New";
+  text-align:       center;
+  font-size:        4em;
+  font-family:      "Courier New";
 }
 
 .goose {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 25%;
+  display:          block;
+  margin-left:      auto;
+  margin-right:     auto;
+  width:            25%;
 }
 
 .actions-table {
-  margin-bottom: 1em;
+  margin-bottom:    1em;
+  margin-left:      auto;
+  margin-right:     auto;
 }
 
 .option-name-col {
-  text-align: right;
-  font-family: "Courier New";
-  font-size: 1.6em;
+  text-align:       right;
+  font-family:      "Courier New";
+  font-size:        1.6em;
 }
 
 .option-input-col {
-  padding-left: 2em;
+  padding-left:     2em;
 }
 
 .option-input {
-  font-family: "Courier New";
-  width: 90%;
-  font-size: 1.2em;
+  font-family:      "Courier New";
+  width:            90%;
+  font-size:        1.2em;
 }
 
 .action-button {
-  width: 5em;
-  cursor: pointer;
+  width:            5em;
+  cursor:           pointer;
 }
 
 .status {
-  font-size: 1em;
-  font-weight: 600;
-  text-align: center;
-  color: rgb(65, 153, 65);
+  font-size:        1em;
+  font-weight:      600;
+  text-align:       center;
+  color:          rgb(65, 153, 65);
 }
 
 .whitelist-title {
-  font-family: "Courier New";
-  font-size: 1.5em;
-  text-decoration: underline;
-  text-align: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  font-family:      "Courier New";
+  font-size:        1.5em;
+  text-decoration:  underline;
+  text-align:       center;
+  padding-top:      1em;
+  padding-bottom:   1em;
 }
 
 .whitelist-table {
-  text-align: right;
-  font-family: "Courier New";
-  font-size: 1.6em;
-  margin-bottom: 10em;
+  text-align:       right;
+  font-family:      "Courier New";
+  font-size:        1.6em;
+  margin-left:      auto;
+  margin-right:     auto;
+  margin-bottom:    10em;
 }
 
 .remove-domain-button {
-  cursor: pointer;
+  cursor:           pointer;
 }
 
 .domain-item {
-  padding-left: 2em;
-  text-align: left;
+  padding-left:     2em;
+  text-align:       left;
 }
