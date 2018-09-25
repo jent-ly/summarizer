@@ -6,11 +6,11 @@ function save_options() {
     apiKey: apiKey
   }, function() {
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'API Key saved!';
+    var keyStatus = document.getElementById('status');
+    keyStatus.textContent = 'API Key saved!';
     setTimeout(function() {
-      status.textContent = '\xa0';
-    }, 1500);
+      keyStatus.textContent = '\xa0';
+    }, 1750);
   });
 }
 
@@ -36,6 +36,23 @@ function add_whitelist_row(domain) {
   document.getElementById('whitelist-list').appendChild(row);
 }
 
+// Helper for adjusting table position of resize BEING REAL EXTRA TBH
+function adjust_tables() {
+  var ol = document.getElementById('options-list');
+  var at = document.getElementById('actions-table');
+  var wt = document.getElementById('whitelist-table');
+  console.log('=====================');
+  console.log(ol.offsetHeight, ol.offsetWidth);
+  console.log(at.offsetHeight, at.offsetWidth);
+  console.log(wt.offsetHeight, wt.offsetWidth);
+
+  var aOffset = (ol.offsetWidth-at.offsetWidth)/2;
+  var wOffset = (ol.offsetWidth-wt.offsetWidth)/2;
+  console.log(aOffset, wOffset);
+  at.style.marginLeft = `${aOffset.toString()}px`;
+  wt.style.marginLeft = `${wOffset.toString()}px`;
+}
+
 // Restores state using the preferences stored in chrome.storage.
 // Specifies default values to use; update when more setable options are added
 function restore_options() {
@@ -51,11 +68,10 @@ function restore_whitelist() {
   // Generates and displays whitelisted domains
   chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
     var whitelist = new Set(result.summaryDomainWhitelist);
-
     for (var domain of whitelist) {
       add_whitelist_row(domain);
     }
-    
+    adjust_tables(); // adjust table positions once whitelist table is populated
   });
 }
 
@@ -69,24 +85,26 @@ function add_domain() {
   chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
     var whitelist = new Set(result.summaryDomainWhitelist);
     var domain = document.getElementById('domain').value;
-    if (whitelist.has(domain)) {
-      // display check if already whitelisted
-      var addedDisplay = document.getElementById('added');
-      addedDisplay.textContent = `'${domain}' is already whitelisted`;
-      setTimeout(function() {
-        addedDisplay.textContent = '\xa0';
-      }, 1500);
-    } else {
-      whitelist.add(domain);
-      chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
-        // display success
-        var addedDisplay = document.getElementById('added');
-        addedDisplay.textContent = `Added '${domain}' to whitelist`;
+    if (!!domain) { // don't want to add an empty string
+      if (whitelist.has(domain)) {
+        // display check if already whitelisted
+        var domainStatus = document.getElementById('status');
+        domainStatus.textContent = `'${domain}' is already whitelisted`;
         setTimeout(function() {
-          addedDisplay.textContent = '\xa0';
-        }, 1500);
-      });
-      add_whitelist_row(domain);
+          domainStatus.textContent = '\xa0';
+        }, 1750);
+      } else {
+        whitelist.add(domain);
+        chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
+          // display success
+          var domainStatus = document.getElementById('status');
+          domainStatus.textContent = `Added '${domain}' to whitelist`;
+          setTimeout(function() {
+            domainStatus.textContent = '\xa0';
+          }, 1750);
+        });
+        add_whitelist_row(domain);
+      }
     }
   });
 }
@@ -103,11 +121,19 @@ function remove_domain(e) {
   chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
     var whitelist = new Set(result.summaryDomainWhitelist);
     whitelist.delete(domain);
-    chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, null);
+    chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
+      // display success
+      var domainStatus = document.getElementById('status');
+      domainStatus.textContent = `Removed '${domain}' from whitelist`;
+      setTimeout(function() {
+        domainStatus.textContent = '\xa0';
+      }, 1750);
+    });
   });
 }
 
 document.addEventListener('DOMContentLoaded', load_options);
 document.getElementById('save').addEventListener('click', save_options);
 document.getElementById('add').addEventListener('click', add_domain);
+window.addEventListener('resize', adjust_tables, true);
 

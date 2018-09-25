@@ -13,31 +13,30 @@
                 <img class="goose" src="../img/goose.png" alt="Summarizing Goose from the Public Domain">
             </div>
         </div>
-        <div class="options-list">
+        <div class="options-list" id="options-list">
             <div>
-                <table class="actions-table">
+                <table class="actions-table" id="actions-table">
                     <tbody>
                     <tr>
                         <td class="option-name-col">API Key:</td>
                         <td class="option-input-col"><input class="option-input" type="text" id="apiKey"></td>
                         <td><button class="action-button" id="save">Save</button></td>
-                        <td><div class="status" id="status">&nbsp;</div></td>
                     </tr>
                     <tr>
                         <td class="option-name-col">Enter domain:</td>
                         <td class="option-input-col"><input class="option-input" type="text" id="domain"></td>
                         <td><button class="action-button" id="add">Add</button></td>
-                        <td><div class="status" id="added">&nbsp;</div></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <br/>
             <div>
+                <div class="status" id="status">&nbsp;</div>
                 <div class="whitelist-title">Whitelisted Domains</div>
             </div>
             <div>
-                <table class="whitelist-table">
+                <table class="whitelist-table" id="whitelist-table">
                     <tbody id="whitelist-list">
 
                     </tbody>

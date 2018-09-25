@@ -17,16 +17,13 @@
 }
 
 .actions-table {
-  margin-left: 30%;
-  margin-right: auto;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 .option-name-col {
   text-align: right;
   font-family: "Courier New";
   font-size: 1.6em;
-  width: 10em;
 }
 
 .option-input-col {
@@ -47,6 +44,7 @@
 .status {
   font-size: 1em;
   font-weight: 600;
+  text-align: center;
   color: rgb(65, 153, 65);
 }
 
@@ -55,6 +53,7 @@
   font-size: 1.5em;
   text-decoration: underline;
   text-align: center;
+  padding-top: 1em;
   padding-bottom: 1em;
 }
 
@@ -62,13 +61,7 @@
   text-align: right;
   font-family: "Courier New";
   font-size: 1.6em;
-  margin-left: 30%;
-  margin-right: auto;
   margin-bottom: 10em;
-}
-
-.remove-domain-col {
-  width: 10em;
 }
 
 .remove-domain-button {
