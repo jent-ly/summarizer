@@ -25,7 +25,7 @@ function apiCall(apiKey) {
       "Content-Type": "application/json",
       "X-Mashape-Key": apiKey,
     },
-    body: '{"url":"' + document.URL + '","text":"","sentnum":8}',
+    body: `{"url":"${document.URL}","text":"","sentnum":8}`,
   });
 }
 
