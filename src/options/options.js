@@ -41,14 +41,9 @@ function adjust_tables() {
   var ol = document.getElementById('options-list');
   var at = document.getElementById('actions-table');
   var wt = document.getElementById('whitelist-table');
-  console.log('=====================');
-  console.log(ol.offsetHeight, ol.offsetWidth);
-  console.log(at.offsetHeight, at.offsetWidth);
-  console.log(wt.offsetHeight, wt.offsetWidth);
 
   var aOffset = (ol.offsetWidth-at.offsetWidth)/2;
   var wOffset = (ol.offsetWidth-wt.offsetWidth)/2;
-  console.log(aOffset, wOffset);
   at.style.marginLeft = `${aOffset.toString()}px`;
   wt.style.marginLeft = `${wOffset.toString()}px`;
 }
