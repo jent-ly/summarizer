@@ -11,7 +11,7 @@ function addDomain() {
       chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
         // display success
         var statusDisplay = document.getElementById('statusDisplay');
-        statusDisplay.textContent = 'Added "' + url.hostname + '". Refresh to see changes.';
+        statusDisplay.textContent = `Added "${url.hostname}". Refresh to see changes.`;
         setTimeout(function() {
           statusDisplay.textContent = '';
         }, floatTime);
@@ -30,7 +30,7 @@ function removeDomain() {
       chrome.storage.sync.set({summaryDomainWhitelist: [...whitelist]}, function() {
         // display success
         var statusDisplay = document.getElementById('statusDisplay');
-        statusDisplay.textContent = 'Removed "' + url.hostname + '"';
+        statusDisplay.textContent = `'Removed "${url.hostname}"'`;
         setTimeout(function() {
           statusDisplay.textContent = '';
         }, floatTime);
