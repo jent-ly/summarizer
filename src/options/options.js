@@ -41,16 +41,14 @@ function add_whitelist_row(domain) {
 function restore_options() {
   
   chrome.storage.sync.get({
-    apiKey: ""
-  }, function(items) {
-    document.getElementById('apiKey').value = items.apiKey;
-  });
-}
+    apiKey: "",
+    summaryDomainWhitelist: []
+  }, function(options) {
+    // display apiKey
+    document.getElementById('apiKey').value = options.apiKey;
 
-function restore_whitelist() {
-  // Generates and displays whitelisted domains
-  chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
-    var whitelist = new Set(result.summaryDomainWhitelist);
+    // generate and display whitelisted domains
+    var whitelist = new Set(options.summaryDomainWhitelist);
     for (var domain of whitelist) {
       add_whitelist_row(domain);
     }
@@ -60,7 +58,6 @@ function restore_whitelist() {
 // Wrapper for page load
 function load_options() {
   restore_options();
-  restore_whitelist();
 }
 
 function add_domain() {
