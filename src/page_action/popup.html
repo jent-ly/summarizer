@@ -1,10 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <body style="width: 300px">
-    <!-- Open <a href="http://stackoverflow.com" target="_blank">this page</a> and then  -->
-    <button id="addDomain">Add domain</button>
-    <button id="removeDomain">Remove domain</button>
-    <div id="statusDisplay"></div>
+  <head>
+      <link rel="stylesheet" type="text/css" href="../css/popup.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="goose-icon"></div>
+      <h1 class="title">Summarizer</h1>
+      <h4 class="subtitle">Summarizer Options</h4>
+      <div class="summ-option-container">
+          <div class="summ-option-group">
+              <p class="summ-option-label">Enable Summarizer</p>
+              <div class="summ-option-slide">
+                  <input type="checkbox" id="enableSummarizer">
+                  <label for="enableSummarizer"></label>
+              </div>
+          </div>
+          <hr class="summ-option-hr">
+          <div class="summ-option-group">
+              <p class="summ-option-link" id="moreOptions">Summarizer Options</p>
+          </div>
+          <hr class="summ-option-hr">
+          <div class="summ-option-group">
+              <button class="summ-option-button" id="whitelistToggle"></button>
+          </div>
+      </div>
+    </div>
+    <div class="summ-toast summ-toast-hidden" id="statusDisplay">Summarizer disabled... Refresh to see changes.</div>
     <script src="../js/popup.js"></script>
   </body>
 </html>
