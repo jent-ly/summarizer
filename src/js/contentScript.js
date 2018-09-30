@@ -1,5 +1,5 @@
 // integrating the Resoomer API
-const API_KEY = "DECBD2E2E379FF7ED5F36B90C0A43AAB";
+// const API_KEY = "DECBD2E2E379FF7ED5F36B90C0A43AAB";
 
 // gets all text without html tags
 function getText() {
