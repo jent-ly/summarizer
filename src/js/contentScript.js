@@ -1,5 +1,5 @@
-// integrating the Resoomer API
-// const API_KEY = "DECBD2E2E379FF7ED5F36B90C0A43AAB";
+// integrating the SMMRY API
+const API_KEY = "0F0300C290";
 
 // gets all text without html tags
 function getText() {
@@ -12,33 +12,29 @@ function getHTML() {
 }
 
 // calls summarizing API
-function summarize(url, apiparams) {
-    fetch(url, {
+function summarize(url) {
+    fetch(url + "?SM_API_KEY=" + API_KEY + "&SM_URL=" + document.URL, {
         method: "POST",
-        mode: "cors",
+		mode: "cors",
         cache: "no-cache",
         headers: {
-            "Accept": "application/json",
+			"Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
         },
         redirect: "follow",
         referrer: "no-referrer",
-        body: apiparams,
     }).then(response => {
         console.log(response);
         response.json().then((data) => {
-            console.log(data);      // summary printed out here
-            let summary = data.text.content;
-            console.log(summary);   // the format is a string, so we can split on '.' to get an array of sentences
+            console.log(data.sm_api_content);           // split on period (.) to get array of sentences to highlight
     	});
     });
 }
 
 (function() {
     let pageText = getText();
-    console.log(pageText);          // pageText may contain "" or '' which can be troublesome
+    console.log(pageText);
     console.log(getHTML());
     
-    let apiparams = "API_KEY=" + API_KEY + "&text='" + pageText + "'";
-    summarize("https://resoomer.pro/summarizer/", apiparams);
+    summarize("https://api.smmry.com/");
 })();
