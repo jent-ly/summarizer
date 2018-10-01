@@ -33,27 +33,30 @@ chrome.storage.sync.get({
     'summaryDomainWhitelist': [],
     'isSummarizerEnabled': false
   }, function(result) {
-  
-  if (result.isSummarizerEnabled) {
-    var whitelist = new Set(result.summaryDomainWhitelist);
-
-    var url = new URL(location.href);
-    if (whitelist.has(url.hostname)) {
-      console.log("Summarizer running on this domain");
-      // code here to summarize and change style
-      chrome.storage.sync.get({
-        apiKey: ""
-      }, (items) => {
-        apiCall(items.apiKey).then(response => {
-            return response.json();
-        }).then(myJson => {
-          displaySummary(myJson.sentences);
-        });
-      });
-    } else {
-      console.log("Summarizer not whitelisted on this domain");
+    // do nothing if not enabled
+    if (!result.isSummarizerEnabled) {
+      console.log("Summarizer disabled");
+      return;
     }
-  } else {
-    console.log("Summarizer disabled");
-  }
+
+    // do nothing if current website is not whitelisted
+    var whitelist = new Set(result.summaryDomainWhitelist);
+    var url = new URL(location.href);
+    if (!whitelist.has(url.hostname)) {
+      console.log("Summarizer not whitelisted on this domain");
+      return;
+    }
+
+    // otherwise, do the thing!
+    console.log("Summarizer running on this domain");
+    // code here to summarize and change style
+    chrome.storage.sync.get({
+      apiKey: ""
+    }, (items) => {
+      apiCall(items.apiKey).then(response => {
+          return response.json();
+      }).then(myJson => {
+        displaySummary(myJson.sentences);
+      });
+    });
 });

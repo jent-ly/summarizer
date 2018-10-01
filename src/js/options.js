@@ -1,15 +1,15 @@
 // Enables/disables the summarizer
 toggle_enable = () => {
   var isChecked = document.getElementById('enable').checked;
-    chrome.storage.sync.set({
-      isSummarizerEnabled: isChecked
-    }, function() {
-      if (isChecked) {
-        display_status('Summarizer enabled!');
-      } else {
-        display_status('Summarizer disabled...');
-      }
-    });
+  chrome.storage.sync.set({
+    isSummarizerEnabled: isChecked
+  }, function() {
+    if (isChecked) {
+      display_status('Summarizer enabled!');
+    } else {
+      display_status('Summarizer disabled...');
+    }
+  });
 }
 
 // Saves apiKey to chrome.storage

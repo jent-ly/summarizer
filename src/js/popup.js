@@ -53,6 +53,7 @@ toggleDomain = () => {
   });
 }
 
+// Helper for displaying status toastr thing
 displayStatus = (status) => {
   var statusToast = document.getElementById('statusDisplay');
   statusToast.textContent = status;
@@ -75,9 +76,9 @@ initPopup = () => {
       var url = new URL(tab.url);
       console.log(url.hostname, whitelist);
       if (whitelist.has(url.hostname)) {
-        document.getElementById('whitelistToggle').innerText = `Remove "${url.hostname}"`
+        document.getElementById('whitelistToggle').innerText = `Remove "${url.hostname}"`;
       } else {
-        document.getElementById('whitelistToggle').innerText = `Add "${url.hostname}"`
+        document.getElementById('whitelistToggle').innerText = `Add "${url.hostname}"`;
       }
     });
   });
