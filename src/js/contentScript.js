@@ -4,8 +4,8 @@ getText = () => {
 }
 
 // gets entire html of page
-getHTML = () => {
-  return document.body.outerHTML
+function getHTML(){
+  return document.body.innerHTML
 }
 
 // TODO: replace with milestone 2 implementation
@@ -54,9 +54,61 @@ chrome.storage.sync.get({
       apiKey: ""
     }, (items) => {
       apiCall(items.apiKey).then(response => {
-          return response.json();
+        return response.json();
       }).then(myJson => {
+        highlightText(myJson.sentences);
         displaySummary(myJson.sentences);
+        console.log("SENTENCES");
+        console.log(myJson.sentences);
       });
     });
 });
+
+function findFirstOccurenceTextInHTML(text, body) {
+  let tag = false;
+  for (let i = 0; i < body.length - text.length + 1; i++) {
+    let body_index = i;
+    let text_index = 0;
+
+    if (body[i] === '<') tag = true;
+    else if (body[i] === '>') tag = false;
+    let saved_tag = tag;
+
+    if (tag) continue;
+    while (text_index < text.length && body_index < body.length) {
+      if (body[body_index] === '<') tag = true;
+
+      if (!tag && body[body_index] !== text[text_index]) break;
+      if (!tag) text_index++;
+
+      if (body[body_index] === '>') tag = false;
+
+      body_index++;
+    }
+    if (text_index == text.length) return [i, body_index]
+    tag = saved_tag;
+  }
+  return []
+}
+
+function highlightText(sentences) {
+  let html = getHTML();
+
+  for (let i = 0 ; i < sentences.length ; i++) {
+    let sub_sentences = sentences[i].split('\n')
+    for (let j = 0 ; j < sub_sentences.length ; j++) {
+      let indices = findFirstOccurenceTextInHTML(sub_sentences[j], html);
+      if (indices.length == 0) {
+        console.log("Unable to find sentence!!");
+        continue;
+      }
+      html = [
+        html.slice(0, indices[0]),
+        "<b style=\"background-color: yellow;\">", html.slice(indices[0], indices[1]), "</b>",
+        html.slice(indices[1])
+      ].join('');
+    }
+  }
+  document.body.innerHTML = html;
+}
+
