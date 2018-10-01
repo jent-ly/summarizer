@@ -33,7 +33,7 @@
         "https://*/*"
       ],
       "css": [
-        "src/inject/inject.css"
+        "src/css/inject.css"
       ]
     },
     {
@@ -49,7 +49,7 @@
         "https://*/*"
       ],
       "css": [
-        "src/inject/inject.css"
+        "src/css/inject.css"
       ],
       "js": [
         "src/js/contentScript.js"

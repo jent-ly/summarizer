@@ -1,15 +1,15 @@
 // gets all text without html tags
-function getText(){
+getText = () => {
   return document.body.innerText
 }
 
 // gets entire html of page
-function getHTML(){
+getHTML = () => {
   return document.body.outerHTML
 }
 
 // TODO: replace with milestone 2 implementation
-function displaySummary(sentences) {
+displaySummary = (sentences) => {
   var div = document.createElement('div');
   div.setAttribute('class', 'summary');
   div.innerHTML = '<h1>Page Summary</h1><ol><li>' + sentences.join('</li><li>') + '</li></ol>';
@@ -17,7 +17,7 @@ function displaySummary(sentences) {
 }
 
 // TODO: replace with milestone 2 implementation
-function apiCall(apiKey) {
+apiCall = (apiKey) => {
   return fetch('https://textanalysis-text-summarization.p.mashape.com/text-summarizer', {
     method: "POST",
     headers: {
@@ -29,11 +29,25 @@ function apiCall(apiKey) {
   });
 }
 
-chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
-  var whitelist = new Set(result.summaryDomainWhitelist);
+chrome.storage.sync.get({
+    'summaryDomainWhitelist': [],
+    'isSummarizerEnabled': false
+  }, function(result) {
+    // do nothing if not enabled
+    if (!result.isSummarizerEnabled) {
+      console.log("Summarizer disabled");
+      return;
+    }
 
-  var url = new URL(location.href);
-  if (whitelist.has(url.hostname)) {
+    // do nothing if current website is not whitelisted
+    var whitelist = new Set(result.summaryDomainWhitelist);
+    var url = new URL(location.href);
+    if (!whitelist.has(url.hostname)) {
+      console.log("Summarizer not whitelisted on this domain");
+      return;
+    }
+
+    // otherwise, do the thing!
     console.log("Summarizer running on this domain");
     // code here to summarize and change style
     chrome.storage.sync.get({
@@ -45,7 +59,4 @@ chrome.storage.sync.get({'summaryDomainWhitelist': []}, function(result) {
         displaySummary(myJson.sentences);
       });
     });
-  } else {
-    console.log("Summarizer not whitelisted on this domain");
-  }
 });
