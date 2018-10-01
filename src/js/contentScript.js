@@ -64,7 +64,7 @@ chrome.storage.sync.get({
     });
 });
 
-function findTextInHTML(text, body) {
+function findFirstOccurenceTextInHTML(text, body) {
   let tag = false;
   for (let i = 0; i < body.length - text.length + 1; i++) {
     let body_index = i;
@@ -97,17 +97,14 @@ function highlightText(sentences) {
   for (let i = 0 ; i < sentences.length ; i++) {
     let sub_sentences = sentences[i].split('\n')
     for (let j = 0 ; j < sub_sentences.length ; j++) {
-      let indices = findTextInHTML(sub_sentences[j], html);
-      console.log("INDICES: ");
-      console.log(indices);
-      console.log(html);
+      let indices = findFirstOccurenceTextInHTML(sub_sentences[j], html);
       if (indices.length == 0) {
         console.log("Unable to find sentence!!");
         continue;
       }
       html = [
         html.slice(0, indices[0]),
-        "<b>", html.slice(indices[0], indices[1]), "</b>",
+        "<b style=\"background-color: yellow;\">", html.slice(indices[0], indices[1]), "</b>",
         html.slice(indices[1])
       ].join('');
     }
