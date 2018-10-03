@@ -35,7 +35,7 @@ chrome.storage.sync.get({
   }, function(result) {
     // do nothing if not enabled
     if (!result.isSummarizerEnabled) {
-      console.log("Summarizer disabled");
+      // console.log("Summarizer disabled");
       return;
     }
 
@@ -43,12 +43,12 @@ chrome.storage.sync.get({
     var whitelist = new Set(result.summaryDomainWhitelist);
     var url = new URL(location.href);
     if (!whitelist.has(url.hostname)) {
-      console.log("Summarizer not whitelisted on this domain");
+      // console.log("Summarizer not whitelisted on this domain");
       return;
     }
 
     // otherwise, do the thing!
-    console.log("Summarizer running on this domain");
+    // console.log("Summarizer running on this domain");
     // code here to summarize and change style
     chrome.storage.sync.get({
       apiKey: ""
@@ -57,9 +57,9 @@ chrome.storage.sync.get({
         return response.json();
       }).then(myJson => {
         highlightText(myJson.sentences);
-        displaySummary(myJson.sentences);
-        console.log("SENTENCES");
-        console.log(myJson.sentences);
+        // displaySummary(myJson.sentences);
+        // console.log("SENTENCES");
+        // console.log(myJson.sentences);
       });
     });
 });
