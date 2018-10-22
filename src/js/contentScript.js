@@ -104,7 +104,7 @@ function highlightText(sentences) {
       }
       html = [
         html.slice(0, indices[0]),
-        "<b style=\"background-color: yellow;\">", html.slice(indices[0], indices[1]), "</b>",
+        "<div style=\"background-color: yellow;\">", html.slice(indices[0], indices[1]), "</div>",
         html.slice(indices[1])
       ].join('');
     }
