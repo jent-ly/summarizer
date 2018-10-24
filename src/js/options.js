@@ -15,6 +15,7 @@ toggle_enable = () => {
 // Saves apiKey to chrome.storage
 save_apiKey = () => {
   var apiKey = document.getElementById('apiKey').value;
+  if (apiKey)
   chrome.storage.sync.set({
     apiKey: apiKey
   }, function() {
@@ -23,18 +24,38 @@ save_apiKey = () => {
   });
 }
 
+// Saves color to chrome.storage
+save_color = () => {
+  var color = document.getElementById('color').value;
+  if (color == "") {
+    chrome.storage
+          .sync
+          .remove("color")
+  } else {
+    chrome.storage
+          .sync
+          .set({
+      color: color
+    }, function() {
+      // Update status to let user know color was saved.
+      display_status('Color saved!');
+    });
+  }
+}
+
 // Restores state using the preferences stored in chrome.storage.
 // Specifies default values to use; update when more setable options are added
 restore_options = () => {
   chrome.storage.sync.get({
     isSummarizerEnabled: false,
     apiKey: "",
+    color: "",
     summaryDomainWhitelist: []
   }, function(options) {
-    // display enabled
+    // display saved chrome.storage values
     document.getElementById('enable').checked = options.isSummarizerEnabled;
-    // display apiKey
     document.getElementById('apiKey').value = options.apiKey;
+    document.getElementById('color').value = options.color;
 
     // generate and display whitelisted domains
     var whitelist = new Set(options.summaryDomainWhitelist);
@@ -84,7 +105,7 @@ remove_domain = (e) => {
 
   // remove from html table
   document.getElementById('whitelist-list').removeChild(row);
-  
+
   // remove from chrome storage
   chrome.storage.sync.get({
     summaryDomainWhitelist: []
@@ -133,6 +154,6 @@ display_status = (status) => {
 
 document.addEventListener('DOMContentLoaded', load_options);
 document.getElementById('save').addEventListener('click', save_apiKey);
+document.getElementById('save-color').addEventListener('click', save_color);
 document.getElementById('add').addEventListener('click', add_domain);
 document.getElementById('enable').addEventListener('change', toggle_enable);
-

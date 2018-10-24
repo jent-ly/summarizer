@@ -94,21 +94,25 @@ function findFirstOccurenceTextInHTML(text, body) {
 function highlightText(sentences) {
   let html = getHTML();
 
-  for (let i = 0 ; i < sentences.length ; i++) {
-    let sub_sentences = sentences[i].split('\n')
-    for (let j = 0 ; j < sub_sentences.length ; j++) {
-      let indices = findFirstOccurenceTextInHTML(sub_sentences[j], html);
-      if (indices.length == 0) {
-        console.log("Unable to find sentence!!");
-        continue;
+  chrome.storage.sync.get({
+    color: "yellow"
+  }, (items) => {
+    let color = items.color;
+    for (let i = 0 ; i < sentences.length ; i++) {
+      let sub_sentences = sentences[i].split('\n')
+      for (let j = 0 ; j < sub_sentences.length ; j++) {
+        let indices = findFirstOccurenceTextInHTML(sub_sentences[j], html);
+        if (indices.length == 0) {
+          console.log("Unable to find sentence!!");
+          continue;
+        }
+        html = [
+          html.slice(0, indices[0]),
+          "<b style=\"background-color: ", color, ";\">", html.slice(indices[0], indices[1]), "</b>",
+          html.slice(indices[1])
+        ].join('');
       }
-      html = [
-        html.slice(0, indices[0]),
-        "<div style=\"background-color: yellow;\">", html.slice(indices[0], indices[1]), "</div>",
-        html.slice(indices[1])
-      ].join('');
     }
-  }
-  document.body.innerHTML = html;
+    document.body.innerHTML = html;
+  });
 }
-
