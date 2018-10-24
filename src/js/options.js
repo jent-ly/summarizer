@@ -15,10 +15,16 @@ toggle_enable = () => {
 // Saves apiKey to chrome.storage
 save_apiKey = () => {
   var apiKey = document.getElementById('apiKey').value;
-  if (apiKey)
-  chrome.storage.sync.set({
-    apiKey: apiKey
-  }, function() {
+  if (apiKey == "") {
+    chrome.storage
+          .sync
+          .remove("apikey", () => {
+            display_status('api key removed');
+          });
+  } else { 
+    chrome.storage
+          .sync
+          .set({ apiKey: apiKey }, function() {
     // Update status to let user know apiKey was saved.
     display_status('API Key saved!');
   });
@@ -30,7 +36,9 @@ save_color = () => {
   if (color == "") {
     chrome.storage
           .sync
-          .remove("color")
+          .remove("color", function() {
+            display_status('Color removed');
+          });
   } else {
     chrome.storage
           .sync
