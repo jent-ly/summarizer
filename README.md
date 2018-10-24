@@ -17,6 +17,7 @@ Currently Summarizer leverages an external text summarization API hosted on Mash
 ![Image](images/1540396789-26591.png)
 1. Open the `Summarizer > Options` page and paste your API key, and hit `Save`
 ![Image](images/1540396900-3316.png)
+1. Back on https://market.mashape.com/textanalysis/text-summarization, hit `Pricing` and subscribe to an appropriate plan. It will ask for credit card information
 1. Summarizer is now ready to use! Note that the Mashape API has **100 free calls/day**, and is paid beyond that
 
 **Note that this is your _personal API key_. Please do not share it with anyone. Sharing it may result in unexpected payments if your payment information is on Mashape.**
