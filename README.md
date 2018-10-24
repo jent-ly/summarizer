@@ -4,9 +4,9 @@
 
 A Chrome extension to summarize any web page, easily, effectively and enjoyably!
 
-### Personal setup
+### Personal use setup
 
-Currently we're leverating an external text summarization API.
+Currently Summarizer leverages an external text summarization API hosted on Mashape.
 
 1. Go to the API at https://market.mashape.com/textanalysis/text-summarization
 1. Sign up to consume the API
