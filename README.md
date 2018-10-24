@@ -4,23 +4,20 @@
 
 A Chrome extension to summarize any web page, easily, effectively and enjoyably!
 
-### Dev Setup
+### Personal setup
 
-To get the project ready for development follow the steps below:
-1. clone repo using `git clone https://github.com/kevintpeng/summarizer.git`
-2. Go to: chrome://extensions
-3. Click: `Load Unpacked`
-4. Selected the cloned Git repo
-5. The extension is now installed!
+Currently we're leverating an external text summarization API.
 
-### Definition of Done
+1. Go to the API at https://market.mashape.com/textanalysis/text-summarization
+1. Sign up to consume the API
+![Image](images/1540396522-17751.png)
+1. Once you're logged in go to `Applications > Default Application`
+![Image](images/1540396657-20464.png)
+1. Click on `Get the keys` and copy your personal API key
+![Image](images/1540396789-26591.png)
+1. Open the `Summarizer > Options` page and paste your API key, and hit `Save`
+![Image](images/1540396900-3316.png)
+1. Summarizer is now ready to use! Note that the Mashape API has **100 free calls/day**, and is paid beyond that
 
-For all of our development stories:
-- Coding standards and style guide is adhered to (place link here)
-- All tests pass [on development environment]
-- All code to be merged is reviewed by at least one other developer
-- All code changes take place on a new "feature branch" that merged in to `master` as a pull request
-- If a deployment is needed, a rollback strategy is documented and verified
-- Architectural decisions and spike results are documented in corresponding README files
-
-Note: This definition of done is not set in stone, it may be updated as needed.
+### Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution information.
