@@ -24,10 +24,10 @@ save_apiKey = () => {
   } else { 
     chrome.storage
           .sync
-          .set({ apiKey: apiKey }, function() {
-    // Update status to let user know apiKey was saved.
-    display_status('API Key saved!');
-  });
+          .set({ apiKey: apiKey }, () => {
+            display_status('API Key saved!');
+          });
+  }
 }
 
 // Saves color to chrome.storage
@@ -36,7 +36,7 @@ save_color = () => {
   if (color == "") {
     chrome.storage
           .sync
-          .remove("color", function() {
+          .remove("color", () => {
             display_status('Color removed');
           });
   } else {
@@ -44,7 +44,7 @@ save_color = () => {
           .sync
           .set({
       color: color
-    }, function() {
+    }, () => {
       // Update status to let user know color was saved.
       display_status('Color saved!');
     });
