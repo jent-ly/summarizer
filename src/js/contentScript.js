@@ -18,14 +18,13 @@ displaySummary = (sentences) => {
 
 // TODO: replace with milestone 2 implementation
 apiCall = (apiKey) => {
-  return fetch('https://textanalysis-text-summarization.p.mashape.com/text-summarizer', {
+  return fetch("https://summarizer-server-lti37l6kqa-uc.a.run.app/api/summarize", {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "X-Mashape-Key": apiKey,
     },
-    body: `{"url":"${document.URL}","text":"","sentnum":8}`,
+    body: JSON.stringify({text: getText()}),
   });
 }
 
@@ -55,11 +54,11 @@ chrome.storage.sync.get({
     }, (items) => {
       apiCall(items.apiKey).then(response => {
         return response.json();
-      }).then(myJson => {
-        highlightText(myJson.sentences);
-        // displaySummary(myJson.sentences);
+      }).then(sentences => {
+        highlightText(sentences);
+        // displaySummary(myJson);
         // console.log("SENTENCES");
-        // console.log(myJson.sentences);
+        // console.log(myJson);
       });
     });
 });
@@ -103,7 +102,7 @@ function highlightText(sentences) {
       for (let j = 0 ; j < sub_sentences.length ; j++) {
         let indices = findFirstOccurenceTextInHTML(sub_sentences[j], html);
         if (indices.length == 0) {
-          console.log("Unable to find sentence!!");
+          console.log("Unable to find sentence \"" + sentences[i] + "\"");
           continue;
         }
         html = [
