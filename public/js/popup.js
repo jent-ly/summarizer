@@ -1,3 +1,4 @@
+/*global chrome*/
 var app = chrome.extension.getBackgroundPage();
 var floatTime = 3000;
 
