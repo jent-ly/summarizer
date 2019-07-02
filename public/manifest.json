@@ -1,5 +1,5 @@
 {
-  "name": "Summarizer",
+  "name": "jent.ly",
   "version": "0.0.1",
   "manifest_version": 3,
   "description": "This extension provides a TL;DR and highlights important text in any website of your choice!",
@@ -10,20 +10,20 @@
   },
   "default_locale": "en",
   "background": {
-    "scripts": ["src/js/showPageAction.js"],
+    "scripts": ["js/showPageAction.js"],
     "persistent": false
   },
-  "options_page": "src/options/index.html",
   "page_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "page action demo",
-    "default_popup": "src/page_action/popup.html"
+    "default_popup": "index.html"
   },
+  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'",
   "permissions": [
+    "*://*/*",
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
-    "*://*/*",
     "storage",
     "tabs"
   ],
@@ -33,7 +33,7 @@
         "https://*/*"
       ],
       "css": [
-        "src/css/inject.css"
+        "css/inject.css"
       ]
     },
     {
@@ -41,7 +41,7 @@
         "https://*/*"
       ],
       "js": [
-        "src/inject/inject.js"
+        "inject/inject.js"
       ]
     },
     {
@@ -49,10 +49,10 @@
         "https://*/*"
       ],
       "css": [
-        "src/css/inject.css"
+        "css/inject.css"
       ],
       "js": [
-        "src/js/contentScript.js"
+        "js/contentScript.js"
       ]
     }
   ]
