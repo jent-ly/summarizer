@@ -24,8 +24,9 @@ const apiCall = () => {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
+      // "Access-Control-Allow-Origin": "*",
     },
-    body: JSON.stringify({text: getText()}),
+    body: JSON.stringify({url: window.location.href, text: getText()}),
   });
 };
 
@@ -60,7 +61,7 @@ const highlightText = (sentences) => {
   let html = getHTML();
 
   chrome.storage.sync.get({
-    color: "yellow"
+    color: "blue"
   }, (items) => {
     let color = items.color;
     for (let i = 0 ; i < sentences.length ; i++) {
