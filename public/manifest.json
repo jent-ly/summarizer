@@ -1,7 +1,7 @@
 {
   "name": "jent.ly",
   "version": "0.0.1",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "description": "This extension provides a TL;DR and highlights important text in any website of your choice!",
   "icons": {
     "16": "icons/icon16.png",
@@ -24,9 +24,11 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
+    "identity",
     "storage",
     "tabs"
   ],
+  "key": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvN8uJBnGPbBtYCFJTYilKqOplFADH1Mz4tNYf3YYCx0y46ICel5Tf6jq2HrdGHiS3vOS+li5YkRcIBJyR5+R+8yVOtrhok0WeE5jIzSYCyrAQfQOYO6Pgf85M3/wYx+VIqTaeQocdHNHW5TZQBo5WinJH6SIeWvwwweo7YuOHqmUYJeeVgr1JLu7nL7bBZApR4qRBvodoxse5S5CBkJ8qXYz6/XApvvlqf9ySVJ9XIEEYkdokX8/BahH+15PTMv6wEMKiPGMBf42fv/+BjIyhOLWQAIBWjRDNjnVR/8ic/NFjOdyhzss5NrBZYYFo0irgoBSjdTSx7sOHnEPgce7OQIDAQAB-----END PUBLIC KEY-----",
   "content_scripts": [
     {
       "matches": [
