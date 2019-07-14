@@ -99,18 +99,11 @@ chrome.storage.sync.get({
     return;
   }
 
-  // query backend script for user info
-  chrome.runtime.sendMessage({request_type: "userInfo"}, function(response) {
-    let email = response.email;
-    let id = response.id;
-    console.log(email);
-    console.log(id);
-    // otherwise, do the thing!
-    // code here to summarize and change style
-    apiCall().then(response => {
-      return response.json();
-    }).then(sentences => {
-      highlightText(sentences);
-    });
+  // otherwise, do the thing!
+  // code here to summarize and change style
+  apiCall().then(response => {
+    return response.json();
+  }).then(sentences => {
+    highlightText(sentences);
   });
 });
