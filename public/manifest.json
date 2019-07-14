@@ -1,12 +1,17 @@
 {
   "name": "jent.ly",
   "version": "0.0.1",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "description": "This extension provides a TL;DR and highlights important text in any website of your choice!",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvN8uJBnGPbBtYCFJTYilKqOplFADH1Mz4tNYf3YYCx0y46ICel5Tf6jq2HrdGHiS3vOS+li5YkRcIBJyR5+R+8yVOtrhok0WeE5jIzSYCyrAQfQOYO6Pgf85M3/wYx+VIqTaeQocdHNHW5TZQBo5WinJH6SIeWvwwweo7YuOHqmUYJeeVgr1JLu7nL7bBZApR4qRBvodoxse5S5CBkJ8qXYz6/XApvvlqf9ySVJ9XIEEYkdokX8/BahH+15PTMv6wEMKiPGMBf42fv/+BjIyhOLWQAIBWjRDNjnVR/8ic/NFjOdyhzss5NrBZYYFo0irgoBSjdTSx7sOHnEPgce7OQIDAQAB",
+  "oauth2": {
+    "client_id": "338539837420-hctmlauf1aj0rfqrhgabc05d6cotu2nd.apps.googleusercontent.com",
+    "scopes": [""]
   },
   "default_locale": "en",
   "background": {
@@ -24,6 +29,8 @@
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
+    "identity",
+    "identity.email",
     "storage",
     "tabs"
   ],
