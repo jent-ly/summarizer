@@ -60,7 +60,7 @@ const highlightText = (sentences) => {
   let html = getHTML();
 
   chrome.storage.sync.get({
-    color: "blue"
+    color: "yellow"
   }, (items) => {
     let color = items.color;
     for (let i = 0 ; i < sentences.length ; i++) {
