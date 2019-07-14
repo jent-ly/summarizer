@@ -18,14 +18,14 @@ const getHTML = () => {
 // };
 
 // TODO: replace with milestone 2 implementation
-const apiCall = () => {
+const apiCall = (userEmail, userId) => {
   return fetch("https://summarizer-server-lti37l6kqa-uc.a.run.app/api/summarize", {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({text: getText()}),
+    body: JSON.stringify({text: getText(), email: userEmail, id: userId}),
   });
 };
 
@@ -101,13 +101,12 @@ chrome.storage.sync.get({
 
   // query backend script for user info
   chrome.runtime.sendMessage({request_type: "userInfo"}, function(response) {
+    // can be "" if user is not logged in
     let email = response.email;
     let id = response.id;
-    console.log(email);
-    console.log(id);
     // otherwise, do the thing!
     // code here to summarize and change style
-    apiCall().then(response => {
+    apiCall(email, id).then(response => {
       return response.json();
     }).then(sentences => {
       highlightText(sentences);
