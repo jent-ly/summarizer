@@ -1,12 +1,12 @@
 /*global chrome*/
 // gets all text without html tags
 const getText = () => {
-  return document.body.innerText
+  return document.body.innerText;
 };
 
 // gets entire html of page
 const getHTML = () => {
-  return document.body.innerHTML
+  return document.body.innerHTML;
 };
 
 // TODO: replace with milestone 2 implementation
@@ -25,7 +25,7 @@ const apiCall = () => {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({text: getText()}),
+    body: JSON.stringify({url: window.location.href, text: getText()}),
   });
 };
 
