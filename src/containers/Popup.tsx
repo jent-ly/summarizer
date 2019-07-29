@@ -1,10 +1,18 @@
 /*global chrome*/
 import React, { Component } from 'react';
-import * as Util from '../common/util'
-import '../css/popup.css';
 // @ts-ignore
-import Tab from 'chrome/tabs/Tab';
-import Toast from '../components/Toast'
+import { Tab as ChromeTab } from 'chrome/tabs/Tab';
+// Components
+import TabPanel from '../components/TabPanel';
+import Toast from '../components/Toast';
+// Material UI
+import AppBar from '@material-ui/core/AppBar';
+import SwipeableViews from 'react-swipeable-views';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+// Style + Util
+import * as Util from '../common/util';
+import '../css/popup.scss';
 
 export default class Popup extends Component {
 
@@ -12,8 +20,30 @@ export default class Popup extends Component {
         domain: null,
         hasDomain: false,
         isEnabled: false,
-        toastVisible: false
+        toastVisible: false,
+        curTab: 0
     };
+
+
+    a11yProps = (index: number) => {
+      return {
+        id: `nav-tab-${index}`,
+        'aria-controls': `nav-tabpanel-${index}`,
+      };
+    }
+
+    handleChangeTab = (ev: any, newTab: number) => {
+        console.log('change tab??', newTab);
+        this.setState({
+            curTab: newTab
+        });
+    }
+
+    handleChangeIndex = (newIndex: number) => {
+        this.setState({
+            curTab: newIndex
+        });
+    }
 
     toggleEnable = () => {
         const enabled = !this.state.isEnabled;
@@ -39,7 +69,7 @@ export default class Popup extends Component {
             ...this.state,
             hasDomain
         });
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs: Tab[] ) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[] ) => {
             const url = new URL(tabs[0].url!);
             if (this.state.hasDomain) {
                 Util.addDomain(url.hostname);
@@ -56,7 +86,7 @@ export default class Popup extends Component {
         }, (storage) => {
             const {summaryDomainWhitelist, isSummarizerEnabled: isEnabled} = storage;
             const whitelist = new Set (summaryDomainWhitelist);
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs: Tab[]) => {
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
                 let hasDomain = false;
                 const {hostname: domain} = new URL(tabs[0].url!);
                 if (whitelist.has(domain)) {
@@ -77,35 +107,64 @@ export default class Popup extends Component {
     };
 
     render() {
-        const { domain, hasDomain, isEnabled } = this.state;
+        const { domain, hasDomain, isEnabled, curTab } = this.state;
         const whitelistToggleText = hasDomain ? `Remove "${domain}"` : `Add "${domain}"`;
         return(
             <div>
                 <div className="container">
                     <div className="goose-icon"/>
                     <h1 className="title">Summarizer</h1>
-                    <div className="summ-option-container">
-                        <div className="summ-option-group">
-                            <p className="summ-option-label">Enable Summarizer</p>
-                            <div className="summ-option-checkbox">
-                                <input
-                                    type="checkbox"
-                                    id="enableSummarizer"
-                                    checked={isEnabled}
-                                    onChange={() => this.toggleEnable()}/>
-                                <label htmlFor="enableSummarizer"/>
-                            </div>
-                        </div>
-                        <hr className="summ-option-hr"/>
-                        <div className="summ-option-group">
-                            <button className="summ-option-button" id="whitelistToggle" onClick={() => this.toggleDomain()}>
-                                {whitelistToggleText}
-                            </button>
-                        </div>
-                    </div>
+                    <AppBar position="static" color="default">
+                        <Tabs
+                          value={curTab}
+                          onChange={this.handleChangeTab}
+                          indicatorColor="primary"
+                          textColor="primary"
+                          variant="fullWidth"
+                          aria-label="tab navigation"
+                        >
+                          <Tab className="tab-label" label="Apply" {...this.a11yProps(0)} />
+                          <Tab className="tab-label" label="Site List" {...this.a11yProps(1)} />
+                          <Tab className="tab-label" label="Options" {...this.a11yProps(2)} />
+                        </Tabs>
+                    </AppBar>
+                    <SwipeableViews
+                        index={curTab}
+                        onChangeIndex={this.handleChangeIndex}
+                    >
+                        <TabPanel value={curTab} index={0}>
+                          Item One
+                        </TabPanel>
+                        <TabPanel value={curTab} index={1}>
+                          Item Two
+                        </TabPanel>
+                        <TabPanel value={curTab} index={2}>
+                          Item Three
+                        </TabPanel>
+                    </SwipeableViews>
                 </div>
                 <Toast/>
             </div>
         );
     }
 }
+
+// <div className="summ-option-container">
+//                         <div className="summ-option-group">
+//                             <p className="summ-option-label">Enable Summarizer</p>
+//                             <div className="summ-option-checkbox">
+//                                 <input
+//                                     type="checkbox"
+//                                     id="enableSummarizer"
+//                                     checked={isEnabled}
+//                                     onChange={() => this.toggleEnable()}/>
+//                                 <label htmlFor="enableSummarizer"/>
+//                             </div>
+//                         </div>
+//                         <hr className="summ-option-hr"/>
+//                         <div className="summ-option-group">
+//                             <button className="summ-option-button" id="whitelistToggle" onClick={() => this.toggleDomain()}>
+//                                 {whitelistToggleText}
+//                             </button>
+//                         </div>
+//                     </div>

@@ -9,8 +9,8 @@ type ToastProps = {
 export default class Toast extends Component {
     render() {
         return (
-            <div className="summ-toast summ-toast-hidden" id="statusDisplay">Summarizer disabled... Refresh to see
-                changes.
+            <div className="summ-toast summ-toast-hidden" id="statusDisplay">
+                Summarizer disabled... Refresh to see changes.
             </div>
         );
     }

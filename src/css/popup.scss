@@ -6,7 +6,7 @@
   padding: 0;
 }
 
-.goose-icon {
+.logo {
   width: 64px;
   height: 64px;
   margin: 15px auto 0;
@@ -30,6 +30,12 @@
   font-weight: normal;
   text-align: center;
   color: #999;
+}
+
+.tab-label {
+  span {
+    font-size: 11px;
+  }
 }
 
 .summ-option-container {

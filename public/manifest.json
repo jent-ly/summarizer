@@ -1,7 +1,7 @@
 {
   "name": "jent.ly",
   "version": "0.0.1",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "description": "This extension provides a TL;DR and highlights important text in any website of your choice!",
   "icons": {
     "16": "icons/icon16.png",
@@ -20,7 +20,7 @@
   },
   "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'",
   "permissions": [
-    "*://*/*",
+    "https://*/*",
     "clipboardRead",
     "clipboardWrite",
     "contextMenus",
