@@ -5,6 +5,7 @@
   "dependencies": {
     "@types/chrome": "0.0.86",
     "@types/react": "^16.8.18",
+    "lodash.template": "^4.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
