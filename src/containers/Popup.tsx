@@ -5,6 +5,8 @@ import { Tab as ChromeTab } from 'chrome/tabs/Tab';
 // Components
 import TabPanel from '../components/TabPanel';
 import MainTab from '../components/MainTab';
+import ListTab from '../components/ListTab';
+import OptionsTab from '../components/OptionsTab';
 import Toast from '../components/Toast';
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
@@ -16,7 +18,7 @@ import Tabs from '@material-ui/core/Tabs';
 import { ThemeProvider } from '@material-ui/styles';
 // Style + Util
 import * as Util from '../common/util';
-import logo from '../img/v1.1-500x96.png'
+import logo from '../img/v1.5-1000x220.png'
 import '../css/popup.scss';
 
 export default class Popup extends Component {
@@ -25,7 +27,12 @@ export default class Popup extends Component {
         hasDomain: false,
         isEnabled: false,
         curTab: 0,
-        whitelist: []
+        whitelist: [],
+        highlightColor: {
+            r: 255,
+            g: 255,
+            b: 0
+        }
     };
 
     theme = createMuiTheme({
@@ -48,6 +55,17 @@ export default class Popup extends Component {
                     background: '#ffec00',
                 },
             },
+            MuiInputBase: {
+                root: {
+                    fontSize: '12px',
+                },
+            },
+            MuiSlider: {
+                root: {
+                    width: '75%',
+                    padding: '0',
+                },
+            },
         },
     });
 
@@ -59,7 +77,6 @@ export default class Popup extends Component {
     }
 
     handleChangeTab = (ev: any, newTab: number) => {
-        console.log('change tab??', newTab);
         this.setState({
             curTab: newTab
         });
@@ -71,6 +88,16 @@ export default class Popup extends Component {
         });
     }
 
+    refreshOrUpdate = (refresh?: boolean) => {
+        if (refresh) {
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+                chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+            });
+        } else {
+            this.updateState();
+        }
+    }
+
     toggleEnable = () => {
         const enabled = !this.state.isEnabled;
         this.setState({
@@ -79,38 +106,75 @@ export default class Popup extends Component {
         chrome.storage.sync.set({
             isSummarizerEnabled: enabled
         });
-        // TODO: message passing to rerun contentscript?
-        // chrome.tabs.query({active: true, currentWindow: true}, function(tabs: ChromeTab[]) {
-        //     console.log("SEND MESSAGE???");
-        //     chrome.tabs.sendMessage(tabs[0].id, {request: "runContentScript"}, function(response) {
-        //         console.log("RECEIVED RESPONSE");
-        //     });
-        // });
+    };
+
+    addDomain = (domain: string, refresh?: boolean) => {
+        chrome.storage.sync.get({
+            summaryDomainWhitelist: []
+        }, ({summaryDomainWhitelist}) => {
+            let whitelist = new Set(summaryDomainWhitelist);
+            whitelist.add(domain);
+            chrome.storage.sync.set({
+                // @ts-ignore - spread operator on Set
+                summaryDomainWhitelist: [...whitelist]
+            }, () => {
+                this.refreshOrUpdate(refresh);
+            });
+        });
+    };
+
+    removeDomain = (domain: string, refresh?: boolean) => {
+        chrome.storage.sync.get({
+            summaryDomainWhitelist: []
+        }, ({summaryDomainWhitelist}) => {
+            let whitelist = new Set(summaryDomainWhitelist);
+            whitelist.delete(domain);
+            chrome.storage.sync.set({
+                // @ts-ignore - spread operator on Set
+                summaryDomainWhitelist: [...whitelist]
+            }, () => {
+                this.refreshOrUpdate(refresh);
+            });
+        });
     };
 
     toggleDomain = () => {
-        console.log('toggle domain', this.state.hasDomain);
         const hasDomain = !this.state.hasDomain;
         this.setState({
-            ...this.state,
             hasDomain
         });
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[] ) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
             const url = new URL(tabs[0].url!);
             if (this.state.hasDomain) {
-                Util.addDomain(url.hostname);
+                this.addDomain(url.hostname, true);
             } else {
-                Util.removeDomain(url.hostname);
+                this.removeDomain(url.hostname, true);
             }
         });
     };
 
+    applyHighlightColor = (newColor: Object) => {
+        chrome.storage.sync.set({
+            color: newColor
+        }, () => {
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+                const url = new URL(tabs[0].url!);
+                this.refreshOrUpdate(this.state.hasDomain);
+            });
+        });
+    }
+
     updateState = () => {
         chrome.storage.sync.get({
             summaryDomainWhitelist: [],
-            isSummarizerEnabled: false
+            isSummarizerEnabled: false,
+            color: {
+                r: 255,
+                g: 255,
+                b: 0
+            }
         }, (storage) => {
-            const {summaryDomainWhitelist, isSummarizerEnabled: isEnabled} = storage;
+            const {summaryDomainWhitelist, isSummarizerEnabled: isEnabled, color: highlightColor} = storage;
             const whitelist = new Set (summaryDomainWhitelist);
             chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
                 let hasDomain = false;
@@ -122,7 +186,8 @@ export default class Popup extends Component {
                     domain,
                     hasDomain,
                     isEnabled,
-                    whitelist: summaryDomainWhitelist
+                    whitelist: summaryDomainWhitelist,
+                    highlightColor
                 });
             });
         });
@@ -133,8 +198,9 @@ export default class Popup extends Component {
     };
 
     render() {
-        const { domain, hasDomain, isEnabled, curTab } = this.state;
+        const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor } = this.state;
         const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
+        console.log("RENDER: ", highlightColor)
         return(
             <ThemeProvider theme={this.theme}>
                 <div className="container">
@@ -170,10 +236,17 @@ export default class Popup extends Component {
                           />
                         </TabPanel>
                         <TabPanel value={curTab} index={1}>
-                          Item Two
+                          <ListTab
+                            whitelist={whitelist}
+                            addDomain={this.addDomain}
+                            removeDomain={this.removeDomain}
+                          />
                         </TabPanel>
                         <TabPanel value={curTab} index={2}>
-                          Item Three
+                          <OptionsTab
+                            highlightColor={highlightColor}
+                            applyHighlightColor={this.applyHighlightColor}
+                          />
                         </TabPanel>
                     </SwipeableViews>
                     <div className="summ-footer">

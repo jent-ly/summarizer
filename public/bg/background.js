@@ -6,8 +6,12 @@
 
 
 //example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	chrome.pageAction.show(sender.tab.id);
-    sendResponse();
-  });
+// chrome.runtime.onMessage.addListener(
+//   function(sender, message, callback) {
+//     if (message.request == "runContentScript") {
+//       chrome.tabs.executeScript({
+//         file: "../js/contentScript.js"
+//       });
+//       callback();
+//     }
+//   });

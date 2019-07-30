@@ -26,7 +26,7 @@ export default class TabPanel extends Component<TabPanelProps, {}>  {
                 aria-labelledby={`nav-tab-${index}`}
                 {...other}
             >
-              <Box p={3}>{children}</Box>
+              <Box p={2}>{children}</Box>
             </Typography>
         );
     }

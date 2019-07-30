@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 type ToastProps = {
-    floatTime: number,
     content: string,
     hidden: boolean
 }
 
-export default class Toast extends Component {
+export default class Toast extends Component<ToastProps, {}>  {
     render() {
+        const { content, hidden } = this.props;
+        const classString = "summ-toast" + ( hidden ? " summ-toast-hidden" : "");
         return (
-            <div className="summ-toast summ-toast-hidden" id="statusDisplay">
-                Summarizer disabled... Refresh to see changes.
+            <div className={classString} id="statusDisplay">
+                {content}
             </div>
         );
     }
