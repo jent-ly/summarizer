@@ -4,26 +4,52 @@ import React, { Component } from 'react';
 import { Tab as ChromeTab } from 'chrome/tabs/Tab';
 // Components
 import TabPanel from '../components/TabPanel';
+import MainTab from '../components/MainTab';
 import Toast from '../components/Toast';
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import { createMuiTheme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { ThemeProvider } from '@material-ui/styles';
 // Style + Util
 import * as Util from '../common/util';
+import logo from '../img/v1.1-500x96.png'
 import '../css/popup.scss';
 
 export default class Popup extends Component {
-
     state = {
-        domain: null,
+        domain: "",
         hasDomain: false,
         isEnabled: false,
-        toastVisible: false,
-        curTab: 0
+        curTab: 0,
+        whitelist: []
     };
 
+    theme = createMuiTheme({
+        palette: {
+            primary: {
+                main: '#ffec00'
+            },
+            secondary: {
+                main: '#fa8d74'
+            },
+        },
+        overrides: {
+            MuiTab: {
+                selected: {
+                    background: '#ffc814',
+                },
+            },
+            MuiTabs: {
+                root: {
+                    background: '#ffec00',
+                },
+            },
+        },
+    });
 
     a11yProps = (index: number) => {
       return {
@@ -48,18 +74,18 @@ export default class Popup extends Component {
     toggleEnable = () => {
         const enabled = !this.state.isEnabled;
         this.setState({
-            ...this.state,
             isEnabled: enabled
         });
         chrome.storage.sync.set({
             isSummarizerEnabled: enabled
-        }, () => {
-            if (enabled) {
-                Util.displayStatus('Summarizer enabled! Refresh to see changes.');
-            } else {
-                Util.displayStatus('Summarizer disabled... Refresh to see changes.');
-            }
         });
+        // TODO: message passing to rerun contentscript?
+        // chrome.tabs.query({active: true, currentWindow: true}, function(tabs: ChromeTab[]) {
+        //     console.log("SEND MESSAGE???");
+        //     chrome.tabs.sendMessage(tabs[0].id, {request: "runContentScript"}, function(response) {
+        //         console.log("RECEIVED RESPONSE");
+        //     });
+        // });
     };
 
     toggleDomain = () => {
@@ -93,10 +119,10 @@ export default class Popup extends Component {
                     hasDomain = true;
                 }
                 this.setState({
-                    ...this.state,
                     domain,
                     hasDomain,
-                    isEnabled
+                    isEnabled,
+                    whitelist: summaryDomainWhitelist
                 });
             });
         });
@@ -108,19 +134,20 @@ export default class Popup extends Component {
 
     render() {
         const { domain, hasDomain, isEnabled, curTab } = this.state;
-        const whitelistToggleText = hasDomain ? `Remove "${domain}"` : `Add "${domain}"`;
+        const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
         return(
-            <div>
+            <ThemeProvider theme={this.theme}>
                 <div className="container">
-                    <div className="goose-icon"/>
-                    <h1 className="title">Summarizer</h1>
+                    <div className="logo-container">
+                        <img className="logo" src={logo} alt="Logo"/>
+                    </div>
                     <AppBar position="static" color="default">
                         <Tabs
                           value={curTab}
                           onChange={this.handleChangeTab}
-                          indicatorColor="primary"
-                          textColor="primary"
-                          variant="fullWidth"
+                          indicatorColor="secondary"
+                          textColor="secondary"
+                          centered
                           aria-label="tab navigation"
                         >
                           <Tab className="tab-label" label="Apply" {...this.a11yProps(0)} />
@@ -129,11 +156,18 @@ export default class Popup extends Component {
                         </Tabs>
                     </AppBar>
                     <SwipeableViews
+                        className="tab-panel" 
                         index={curTab}
                         onChangeIndex={this.handleChangeIndex}
                     >
                         <TabPanel value={curTab} index={0}>
-                          Item One
+                          <MainTab
+                            isEnabled={isEnabled}
+                            toggleDomain={this.toggleDomain}
+                            toggleEnable={this.toggleEnable}
+                            whitelistToggleText={whitelistToggleText}
+                            domain={domain}
+                          />
                         </TabPanel>
                         <TabPanel value={curTab} index={1}>
                           Item Two
@@ -142,29 +176,12 @@ export default class Popup extends Component {
                           Item Three
                         </TabPanel>
                     </SwipeableViews>
+                    <div className="summ-footer">
+                        <Button className="misc-button" size="small" color="secondary">Donate</Button>
+                        <Button className="misc-button" size="small" color="secondary">Feedback</Button>
+                    </div>
                 </div>
-                <Toast/>
-            </div>
+            </ThemeProvider>
         );
     }
 }
-
-// <div className="summ-option-container">
-//                         <div className="summ-option-group">
-//                             <p className="summ-option-label">Enable Summarizer</p>
-//                             <div className="summ-option-checkbox">
-//                                 <input
-//                                     type="checkbox"
-//                                     id="enableSummarizer"
-//                                     checked={isEnabled}
-//                                     onChange={() => this.toggleEnable()}/>
-//                                 <label htmlFor="enableSummarizer"/>
-//                             </div>
-//                         </div>
-//                         <hr className="summ-option-hr"/>
-//                         <div className="summ-option-group">
-//                             <button className="summ-option-button" id="whitelistToggle" onClick={() => this.toggleDomain()}>
-//                                 {whitelistToggleText}
-//                             </button>
-//                         </div>
-//                     </div>
