@@ -93,9 +93,8 @@ export default class Popup extends Component {
             chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
                 chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
             });
-        } else {
-            this.updateState();
         }
+        this.updateState();
     }
 
     toggleEnable = () => {
