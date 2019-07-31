@@ -4,7 +4,6 @@ node_js:
 
 install:
   - npm install
-  - npm install tslint typescript -g
 
 script:
   - npm run build
