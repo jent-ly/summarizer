@@ -8,5 +8,5 @@ install:
 
 script:
   - npm run build
-  - tslint --test .
+  - tslint --test --project src/tsconfig.json
   - CI=true npm test
