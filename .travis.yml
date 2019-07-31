@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "7"
+
+install:
+  - npm install
+  - npm install tslint typescript -g
+
+script:
+  - npm run build
+  - tslint --test .
+  - CI=true npm test
