@@ -19,13 +19,13 @@ const getHTML = () => {
 
 // TODO: replace with milestone 2 implementation
 const apiCall = () => {
-  return fetch("https://summarizer-server-lti37l6kqa-uc.a.run.app/api/summarize", {
+  return fetch("https://jent.ly/api/summarize", {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({url: window.location.href, text: getText()}),
+    body: JSON.stringify({url: window.location.href, html: getHTML()}),
   });
 };
 
@@ -105,5 +105,7 @@ chrome.storage.sync.get({
     return response.json();
   }).then(sentences => {
     highlightText(sentences);
+  }).catch(exception => {
+    console.log(exception);
   });
 });
