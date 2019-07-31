@@ -1,12 +1,12 @@
 /*global chrome*/
 // gets all text without html tags
 const getText = () => {
-  return document.body.innerText
+  return document.body.innerText;
 };
 
 // gets entire html of page
 const getHTML = () => {
-  return document.body.innerHTML
+  return document.body.innerHTML;
 };
 
 // TODO: replace with milestone 2 implementation
@@ -19,13 +19,13 @@ const getHTML = () => {
 
 // TODO: replace with milestone 2 implementation
 const apiCall = (userEmail, userId) => {
-  return fetch("https://summarizer-server-lti37l6kqa-uc.a.run.app/api/summarize", {
+  return fetch("https://jent.ly/api/summarize", {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({text: getText(), email: userEmail, id: userId}),
+    body: JSON.stringify({url: window.location.href, html: getHTML(), email: userEmail, id: userId}),
   });
 };
 
@@ -60,9 +60,9 @@ const highlightText = (sentences) => {
   let html = getHTML();
 
   chrome.storage.sync.get({
-    color: "yellow"
+    color: {r: 255, g: 255, b: 0}
   }, (items) => {
-    let color = items.color;
+    let color = 'rgb(' + items.color.r + ',' + items.color.g + ',' + items.color.b + ')';
     for (let i = 0 ; i < sentences.length ; i++) {
       let sub_sentences = sentences[i].split('\n')
       for (let j = 0 ; j < sub_sentences.length ; j++) {
@@ -110,6 +110,8 @@ chrome.storage.sync.get({
       return response.json();
     }).then(sentences => {
       highlightText(sentences);
+    }).catch(exception => {
+      console.log(exception);
     });
   });
 });
