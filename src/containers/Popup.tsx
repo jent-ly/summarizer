@@ -207,8 +207,7 @@ export default class Popup extends Component {
                 // TODO: get the following data from user input
                 const description = "";
 
-                // return fetch("https://jent.ly/api/feedback/submit", {
-                return fetch("https://e4904be1.ngrok.io/api/feedback/submit", {
+                return fetch("https://jent.ly/api/feedback/submit", {
                     body: JSON.stringify({url, score, description, email, gaia}),
                     headers: {
                         "Accept": "application/json",
