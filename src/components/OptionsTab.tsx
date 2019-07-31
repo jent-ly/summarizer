@@ -1,149 +1,167 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import Paper from '@material-ui/core/Paper';
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import Paper from "@material-ui/core/Paper";
+import Slider from "@material-ui/core/Slider";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import React, { Component } from "react";
 
-type OptionsTabProps = {
+interface IOptionsTabProps {
     highlightColor: {
         r: number,
         g: number,
-        b: number
-    },
-    applyHighlightColor: (newColor: Object) => void
+        b: number,
+    };
+    applyHighlightColor: (newColor: object) => void;
 }
 
 const ColorSlider = (hexColor: string) => withStyles({
+  active: {},
+  rail: {
+    borderRadius: 4,
+    height: 8,
+  },
   root: {
     color: hexColor,
     height: 8,
   },
   thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    marginTop: -8,
-    marginLeft: -12,
-    '&:focus,&:hover,&$active': {
-      boxShadow: 'inherit',
+    "&:focus,&:hover,&$active": {
+      boxShadow: "inherit",
     },
-  },
-  active: {},
-  valueLabel: {
-    left: 'calc(-50% + 4px)',
-
+    "backgroundColor": "#fff",
+    "border": "2px solid currentColor",
+    "height": 24,
+    "marginLeft": -12,
+    "marginTop": -8,
+    "width": 24,
   },
   track: {
-    height: 8,
     borderRadius: 4,
+    height: 8,
   },
-  rail: {
-    height: 8,
-    borderRadius: 4,
+  valueLabel: {
+    left: "calc(-50% + 4px)",
   },
 })(Slider);
 
-//#52af77
-const RedSlider = ColorSlider('#d40000')
-const GrnSlider = ColorSlider('#00d400')
-const BluSlider = ColorSlider('#0051d3')
+// #52af77
+const RedSlider = ColorSlider("#d40000");
+const GrnSlider = ColorSlider("#00d400");
+const BluSlider = ColorSlider("#0051d3");
 
-export default class OptionsTab extends Component<OptionsTabProps, {}>  {
-    state: {[key: string]: any} = {}
+export default class OptionsTab extends Component<IOptionsTabProps, {}>  {
+    public state: {[key: string]: any} = {};
 
     constructor(props: any) {
         super(props);
-        console.log('CONSTRUCTOR!!', props);
         this.state = {
-            ...props.highlightColor
+            ...props.highlightColor,
         };
     }
 
-
-    handleSliderChange = (val: number | number[], color: string) => {
+    public handleSliderChange = (val: number | number[], color: string) => {
         this.setState({
-            [color]: val
+            [color]: val,
         });
     }
 
-    decrementColorValue = (color: string) => {
+    public decrementColorValue = (color: string) => {
         const curVal = this.state[color];
         const decremented = curVal - (curVal % 5 ? curVal % 5 : 5);
         const newVal = decremented < 0 ? 0 : decremented;
         this.setState({
-            [color]: newVal
+            [color]: newVal,
         });
     }
 
-    incrementColorValue = (color: string) => {
+    public incrementColorValue = (color: string) => {
         const curVal = this.state[color];
         const incremented = curVal + (5 - curVal % 5);
         const newVal = incremented > 255 ? 255 : incremented;
         this.setState({
-            [color]: newVal
+            [color]: newVal,
         });
     }
 
-    applyColor = () => {
-        console.log('apply color...', this.state);
+    public applyColor = () => {
         this.props.applyHighlightColor({
-            r: this.state.r,
+            b: this.state.b,
             g: this.state.g,
-            b: this.state.b
+            r: this.state.r,
         });
     }
 
-    componentWillReceiveProps = (props: any) => {
-        console.log("RECEIVE: ",props);
+    public componentWillReceiveProps = (props: any) => {
         this.setState({
-            ...props.highlightColor
+            ...props.highlightColor,
         });
     }
 
-    render() {
-        const highlightStyle = {backgroundColor: `rgb(${this.state.r},${this.state.g},${this.state.b})`}
+    public render() {
+        const highlightStyle = {backgroundColor: `rgb(${this.state.r},${this.state.g},${this.state.b})`};
         return (
             <div className="options-container">
                 <div className="highlight-title">
                     Highlight
                 </div>
                 <div className="color-slider-container">
-                    <IconButton className="color-adjust-button dec-red" onClick={(event) => this.decrementColorValue('r')}
-                        size="small" edge="start" aria-label="decrease-red-highlight" >
+                    <IconButton className="color-adjust-button dec-red"
+                        onClick={
+                            (event) => this.decrementColorValue("r")
+                        } size="small" edge="start" aria-label="decrease-red-highlight" >
                         <KeyboardArrowLeftIcon/>
                     </IconButton>
                     <RedSlider className="color-slider" defaultValue={this.state.r} value={this.state.r}
-                        onChange={(event, val) => this.handleSliderChange(val, 'r')} max={255} valueLabelDisplay="auto" />
-                    <IconButton className="color-adjust-button inc-red" onClick={(event) => this.incrementColorValue('r')}
+                    onChange={
+                            (event, val) => this.handleSliderChange(val, "r")
+                            } max={255} valueLabelDisplay="auto" />
+                    <IconButton className="color-adjust-button inc-red"
+                        onClick={
+                            (event) => this.incrementColorValue("r")
+                        }
                         size="small" edge="end" aria-label="increase-red-highlight" >
                         <KeyboardArrowRightIcon/>
                     </IconButton>
                 </div>
                 <div className="color-slider-container">
-                    <IconButton className="color-adjust-button dec-grn" onClick={(event) => this.decrementColorValue('g')}
+                    <IconButton className="color-adjust-button dec-grn"
+                        onClick={
+                            (event) => this.decrementColorValue("g")
+                        }
                         size="small" edge="start" aria-label="decrease-red-highlight" >
                         <KeyboardArrowLeftIcon/>
                     </IconButton>
-                    <GrnSlider className="color-slider" defaultValue={this.state.g} value={this.state.g} 
-                        onChange={(event, val) => this.handleSliderChange(val, 'g')} max={255} valueLabelDisplay="auto" />
-                    <IconButton className="color-adjust-button inc-blu" onClick={(event) => this.incrementColorValue('g')}
+                    <GrnSlider className="color-slider" defaultValue={this.state.g} value={this.state.g}
+                        onChange={
+                            (event, val) => this.handleSliderChange(val, "g")
+                        } max={255} valueLabelDisplay="auto" />
+                    <IconButton className="color-adjust-button inc-blu"
+                        onClick={
+                            (event) => this.incrementColorValue("g")
+                        }
                         size="small" edge="end" aria-label="increase-red-highlight" >
                         <KeyboardArrowRightIcon/>
                     </IconButton>
                 </div>
                 <div className="color-slider-container">
-                    <IconButton className="color-adjust-button dec-blu" onClick={(event) => this.decrementColorValue('b')}
+                    <IconButton className="color-adjust-button dec-blu"
+                        onClick={
+                            (event) => this.decrementColorValue("b")
+                        }
                         size="small" edge="start" aria-label="decrease-red-highlight" >
                         <KeyboardArrowLeftIcon/>
                     </IconButton>
-                    <BluSlider className="color-slider" defaultValue={this.state.b} value={this.state.b} 
-                        onChange={(event, val) => this.handleSliderChange(val, 'b')} max={255} valueLabelDisplay="auto" />
-                    <IconButton className="color-adjust-button inc-blu" onClick={(event) => this.incrementColorValue('b')}
+                    <BluSlider className="color-slider" defaultValue={this.state.b} value={this.state.b}
+                        onChange={
+                            (event, val) => this.handleSliderChange(val, "b")
+                        } max={255} valueLabelDisplay="auto" />
+                    <IconButton className="color-adjust-button inc-blu"
+                        onClick={
+                            (event) => this.incrementColorValue("b")
+                        }
                         size="small" edge="end" aria-label="increase-red-highlight" >
                         <KeyboardArrowRightIcon/>
                     </IconButton>
@@ -154,10 +172,10 @@ export default class OptionsTab extends Component<OptionsTabProps, {}>  {
                     </Typography>
                 </Paper>
                 <div className="highlight-apply-button-container">
-                    <Button 
+                    <Button
                         className="highlight-apply-button"
-                        variant="outlined" 
-                        color="secondary" 
+                        variant="outlined"
+                        color="secondary"
                         onClick={this.applyColor}>
                         <div className="highlight-apply-button-text">
                             Apply Highlight Color
