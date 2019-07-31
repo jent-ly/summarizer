@@ -25,7 +25,7 @@ const apiCall = (userEmail, userId) => {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({url: window.location.href, html: getHTML(), email: userEmail, id: userId}),
+    body: JSON.stringify({url: window.location.href, html: getHTML(), email: userEmail, gaia: userId}),
   });
 };
 
