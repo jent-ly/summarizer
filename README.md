@@ -1,5 +1,7 @@
 # summarizer
 
+[![Build Status](https://travis-ci.com/jent-ly/summarizer.svg?branch=master)](https://travis-ci.com/jent-ly/summarizer)
+
 ### Article Summarizer
 
 A Chrome extension to summarize any web page, easily, effectively and enjoyably!
