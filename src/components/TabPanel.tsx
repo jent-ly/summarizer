@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-type TabPanelProps = {
-    value: any,
-    index: any
+interface ITabPanelProps {
+    value: any;
+    index: any;
 }
 
-export default class TabPanel extends Component<TabPanelProps, {}>  {
-    static propTypes = {
+export default class TabPanel extends Component<ITabPanelProps, {}>  {
+    public static propTypes = {
         children: PropTypes.node,
+        index: PropTypes.any.isRequired,
         value: PropTypes.any.isRequired,
-        index: PropTypes.any.isRequired
-    }
+    };
 
-    render() {
+    public render() {
         const {children, value, index, ...other} = this.props;
         return (
             <Typography

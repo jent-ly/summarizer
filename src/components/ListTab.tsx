@@ -1,53 +1,53 @@
-import React, { Component } from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import TextField from '@material-ui/core/TextField';
+import IconButton from "@material-ui/core/IconButton";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import React, { Component } from "react";
 
-type ListTabProps = {
-    whitelist: string[],
-    addDomain: (domain: string, refresh?: boolean) => void,
-    removeDomain: (domain: string, refresh?: boolean) => void
+interface IListTabProps {
+    whitelist: string[];
+    addDomain: (domain: string, refresh?: boolean) => void;
+    removeDomain: (domain: string, refresh?: boolean) => void;
 }
 
-export default class ListTab extends Component<ListTabProps, {}>  {
-    state = {
-        newDomainValue: ""
-    }
+export default class ListTab extends Component<IListTabProps, {}>  {
+    public state = {
+        newDomainValue: "",
+    };
 
-    handleTextChange = (event: any) => {
+    public handleTextChange = (event: any) => {
         this.setState({
-            newDomainValue: event.target.value
+            newDomainValue: event.target.value,
         });
     }
 
-    handleEnter = (event: any) => {
-        if (event.key === 'Enter') {
+    public handleEnter = (event: any) => {
+        if (event.key === "Enter") {
             event.preventDefault();
-            this.props.addDomain(this.state.newDomainValue)
+            this.props.addDomain(this.state.newDomainValue);
             this.setState({
-                newDomainValue: ""
+                newDomainValue: "",
             });
         }
     }
 
-    render() {
+    public render() {
         const { whitelist, removeDomain } = this.props;
         return (
             <div className="whitelist-container">
                 <div className="whitelist-scrollable">
                     <List dense disablePadding>
-                        {whitelist.map(domain => (
+                        {whitelist.map((domain) => (
                             <ListItem>
                               <ListItemText
                                 className="whitelist-domain-text"
                                 secondary={domain}
                               />
                               <ListItemSecondaryAction>
-                                <IconButton 
+                                <IconButton
                                   className="whitelist-remove"
                                   size="small"
                                   edge="end"
@@ -60,7 +60,7 @@ export default class ListTab extends Component<ListTabProps, {}>  {
                         ))}
                     </List>
                 </div>
-                <TextField 
+                <TextField
                     className="whitelist-add"
                     id="add-domain-input"
                     placeholder="http://example.com/article"

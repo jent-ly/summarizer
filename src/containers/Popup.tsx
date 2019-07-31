@@ -1,94 +1,92 @@
 /*global chrome*/
-import React, { Component } from 'react';
-// @ts-ignore
-import { Tab as ChromeTab } from 'chrome/tabs/Tab';
-// Components
-import TabPanel from '../components/TabPanel';
-import MainTab from '../components/MainTab';
-import ListTab from '../components/ListTab';
-import OptionsTab from '../components/OptionsTab';
-import Toast from '../components/Toast';
 // Material UI
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import { createMuiTheme } from '@material-ui/core/styles';
-import SwipeableViews from 'react-swipeable-views';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { ThemeProvider } from '@material-ui/styles';
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import { createMuiTheme } from "@material-ui/core/styles";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import { ThemeProvider } from "@material-ui/styles";
+// @ts-ignore
+import { Tab as ChromeTab } from "chrome/tabs/Tab";
+import React, { Component } from "react";
+import SwipeableViews from "react-swipeable-views";
 // Style + Util
-import * as Util from '../common/util';
-import logo from '../img/v1.5-1000x220.png'
-import '../css/popup.scss';
+import ListTab from "../components/ListTab";
+import MainTab from "../components/MainTab";
+import OptionsTab from "../components/OptionsTab";
+// Components
+import TabPanel from "../components/TabPanel";
+import "../css/popup.scss";
+import logo from "../img/v1.5-1000x220.png";
 
 export default class Popup extends Component {
-    state = {
+    public state = {
+        curTab: 0,
         domain: "",
         hasDomain: false,
-        isEnabled: false,
-        curTab: 0,
-        whitelist: [],
         highlightColor: {
-            r: 255,
+            b: 0,
             g: 255,
-            b: 0
-        }
+            r: 255,
+        },
+        isEnabled: false,
+        whitelist: [],
     };
 
-    theme = createMuiTheme({
-        palette: {
-            primary: {
-                main: '#ffec00'
-            },
-            secondary: {
-                main: '#fa8d74'
-            },
-        },
+    public theme = createMuiTheme({
         overrides: {
-            MuiTab: {
-                selected: {
-                    background: '#ffc814',
-                },
-            },
-            MuiTabs: {
-                root: {
-                    background: '#ffec00',
-                },
-            },
             MuiInputBase: {
                 root: {
-                    fontSize: '12px',
+                    fontSize: "12px",
                 },
             },
             MuiSlider: {
                 root: {
-                    width: '75%',
-                    padding: '0',
+                    padding: "0",
+                    width: "75%",
                 },
+            },
+            MuiTab: {
+                selected: {
+                    background: "#ffc814",
+                },
+            },
+            MuiTabs: {
+                root: {
+                    background: "#ffec00",
+                },
+            },
+        },
+        palette: {
+            primary: {
+                main: "#ffec00",
+            },
+            secondary: {
+                main: "#fa8d74",
             },
         },
     });
 
-    a11yProps = (index: number) => {
+    public a11yProps = (index: number) => {
       return {
-        id: `nav-tab-${index}`,
-        'aria-controls': `nav-tabpanel-${index}`,
+        "aria-controls": `nav-tabpanel-${index}`,
+        "id": `nav-tab-${index}`,
       };
     }
 
-    handleChangeTab = (ev: any, newTab: number) => {
+    public handleChangeTab = (ev: any, newTab: number) => {
         this.setState({
-            curTab: newTab
+            curTab: newTab,
         });
     }
 
-    handleChangeIndex = (newIndex: number) => {
+    public handleChangeIndex = (newIndex: number) => {
         this.setState({
-            curTab: newIndex
+            curTab: newIndex,
         });
     }
 
-    refreshOrUpdate = (refresh?: boolean) => {
+    public refreshOrUpdate = (refresh?: boolean) => {
         if (refresh) {
             chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
                 chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
@@ -97,50 +95,50 @@ export default class Popup extends Component {
         this.updateState();
     }
 
-    toggleEnable = () => {
+    public toggleEnable = () => {
         const enabled = !this.state.isEnabled;
         this.setState({
-            isEnabled: enabled
+            isEnabled: enabled,
         });
         chrome.storage.sync.set({
-            isSummarizerEnabled: enabled
+            isSummarizerEnabled: enabled,
         });
-    };
+    }
 
-    addDomain = (domain: string, refresh?: boolean) => {
+    public addDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: []
+            summaryDomainWhitelist: [],
         }, ({summaryDomainWhitelist}) => {
-            let whitelist = new Set(summaryDomainWhitelist);
+            const whitelist = new Set(summaryDomainWhitelist);
             whitelist.add(domain);
             chrome.storage.sync.set({
                 // @ts-ignore - spread operator on Set
-                summaryDomainWhitelist: [...whitelist]
+                summaryDomainWhitelist: [...whitelist],
             }, () => {
                 this.refreshOrUpdate(refresh);
             });
         });
-    };
+    }
 
-    removeDomain = (domain: string, refresh?: boolean) => {
+    public removeDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: []
+            summaryDomainWhitelist: [],
         }, ({summaryDomainWhitelist}) => {
-            let whitelist = new Set(summaryDomainWhitelist);
+            const whitelist = new Set(summaryDomainWhitelist);
             whitelist.delete(domain);
             chrome.storage.sync.set({
                 // @ts-ignore - spread operator on Set
-                summaryDomainWhitelist: [...whitelist]
+                summaryDomainWhitelist: [...whitelist],
             }, () => {
                 this.refreshOrUpdate(refresh);
             });
         });
-    };
+    }
 
-    toggleDomain = () => {
+    public toggleDomain = () => {
         const hasDomain = !this.state.hasDomain;
         this.setState({
-            hasDomain
+            hasDomain,
         });
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
             const url = new URL(tabs[0].url!);
@@ -150,28 +148,27 @@ export default class Popup extends Component {
                 this.removeDomain(url.hostname, true);
             }
         });
-    };
+    }
 
-    applyHighlightColor = (newColor: Object) => {
+    public applyHighlightColor = (newColor: object) => {
         chrome.storage.sync.set({
-            color: newColor
+            color: newColor,
         }, () => {
             chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
-                const url = new URL(tabs[0].url!);
                 this.refreshOrUpdate(this.state.hasDomain);
             });
         });
     }
 
-    updateState = () => {
+    public updateState = () => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: [],
-            isSummarizerEnabled: false,
             color: {
-                r: 255,
+                b: 0,
                 g: 255,
-                b: 0
-            }
+                r: 255,
+            },
+            isSummarizerEnabled: false,
+            summaryDomainWhitelist: [],
         }, (storage) => {
             const {summaryDomainWhitelist, isSummarizerEnabled: isEnabled, color: highlightColor} = storage;
             const whitelist = new Set (summaryDomainWhitelist);
@@ -184,22 +181,21 @@ export default class Popup extends Component {
                 this.setState({
                     domain,
                     hasDomain,
+                    highlightColor,
                     isEnabled,
                     whitelist: summaryDomainWhitelist,
-                    highlightColor
                 });
             });
         });
-    };
+    }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.updateState();
-    };
+    }
 
-    render() {
+    public render() {
         const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor } = this.state;
         const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
-        console.log("RENDER: ", highlightColor)
         return(
             <ThemeProvider theme={this.theme}>
                 <div className="container">
@@ -221,7 +217,7 @@ export default class Popup extends Component {
                         </Tabs>
                     </AppBar>
                     <SwipeableViews
-                        className="tab-panel" 
+                        className="tab-panel"
                         index={curTab}
                         onChangeIndex={this.handleChangeIndex}
                     >

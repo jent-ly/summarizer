@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-type ToastProps = {
-    content: string,
-    hidden: boolean
+interface IToastProps {
+    content: string;
+    hidden: boolean;
 }
 
-export default class Toast extends Component<ToastProps, {}>  {
-    render() {
+export default class Toast extends Component<IToastProps, {}>  {
+    public render() {
         const { content, hidden } = this.props;
         const classString = "summ-toast" + ( hidden ? " summ-toast-hidden" : "");
         return (
