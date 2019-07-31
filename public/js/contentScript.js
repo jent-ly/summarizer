@@ -18,14 +18,14 @@ const getHTML = () => {
 // };
 
 // TODO: replace with milestone 2 implementation
-const apiCall = () => {
+const apiCall = (userEmail, userId) => {
   return fetch("https://jent.ly/api/summarize", {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({url: window.location.href, html: getHTML()}),
+    body: JSON.stringify({url: window.location.href, html: getHTML(), email: userEmail, gaia: userId}),
   });
 };
 
@@ -99,13 +99,19 @@ chrome.storage.sync.get({
     return;
   }
 
-  // otherwise, do the thing!
-  // code here to summarize and change style
-  apiCall().then(response => {
-    return response.json();
-  }).then(sentences => {
-    highlightText(sentences);
-  }).catch(exception => {
-    console.log(exception);
+  // query backend script for user info
+  chrome.runtime.sendMessage({request_type: "userInfo"}, function(response) {
+    // can be "" if user is not logged in
+    let email = response.email;
+    let id = response.id;
+    // otherwise, do the thing!
+    // code here to summarize and change style
+    apiCall(email, id).then(response => {
+      return response.json();
+    }).then(sentences => {
+      highlightText(sentences);
+    }).catch(exception => {
+      console.log(exception);
+    });
   });
 });
