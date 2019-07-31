@@ -11,13 +11,11 @@ import { Tab as ChromeTab } from "chrome/tabs/Tab";
 import React, { Component } from "react";
 import SwipeableViews from "react-swipeable-views";
 // Style + Util
-import * as Util from "../common/util";
 import ListTab from "../components/ListTab";
 import MainTab from "../components/MainTab";
 import OptionsTab from "../components/OptionsTab";
 // Components
 import TabPanel from "../components/TabPanel";
-import Toast from "../components/Toast";
 import "../css/popup.scss";
 import logo from "../img/v1.5-1000x220.png";
 
@@ -158,7 +156,6 @@ export default class Popup extends Component {
             color: newColor,
         }, () => {
             chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
-                const url = new URL(tabs[0].url!);
                 this.refreshOrUpdate(this.state.hasDomain);
             });
         });
