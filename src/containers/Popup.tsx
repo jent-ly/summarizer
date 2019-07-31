@@ -197,6 +197,31 @@ export default class Popup extends Component {
         this.updateState();
     };
 
+    // userEmail and userId can be "" if the user is not logged in
+    submitFeedbackApiCall = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+            let url = tabs[0].url;
+            
+            chrome.identity.getProfileUserInfo(function(userInfo) {	
+                let email = userInfo.email;
+                let gaia = userInfo.id;
+
+                // TODO: get the following data from user input
+                let score = Math.floor(Math.random() * 5);
+                let description = "";
+
+                return fetch("https://jent.ly/api/feedback/submit", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({url: url, score: score, description: description, email: email, gaia: gaia}),
+                });
+            });
+        });
+      };
+
     render() {
         const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor } = this.state;
         const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
@@ -251,7 +276,7 @@ export default class Popup extends Component {
                     </SwipeableViews>
                     <div className="summ-footer">
                         <Button className="misc-button" size="small" color="secondary">Donate</Button>
-                        <Button className="misc-button" size="small" color="secondary">Feedback</Button>
+                        <Button className="misc-button" size="small" color="secondary" onClick={this.submitFeedbackApiCall}>Feedback</Button>
                     </div>
                 </div>
             </ThemeProvider>
