@@ -244,10 +244,6 @@ export default class Popup extends Component {
                           />
                         </TabPanel>
                     </SwipeableViews>
-                    <div className="summ-footer">
-                        <Button className="misc-button" size="small" color="secondary">Donate</Button>
-                        <Button className="misc-button" size="small" color="secondary">Feedback</Button>
-                    </div>
                 </div>
             </ThemeProvider>
         );
