@@ -1,7 +1,6 @@
 /*global chrome*/
 // Material UI
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
 import { createMuiTheme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
