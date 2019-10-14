@@ -9,109 +9,34 @@ const getHTML = () => {
   return document.body.innerHTML;
 };
 
-// TODO: replace with milestone 2 implementation
-// const displaySummary = (sentences) => {
-//   var div = document.createElement('div');
-//   div.setAttribute('class', 'summary');
-//   div.innerHTML = '<h1>Page Summary</h1><ol><li>' + sentences.join('</li><li>') + '</li></ol>';
-//   document.body.insertBefore(div, document.body.firstChild);
-// };
-
-// TODO: replace with milestone 2 implementation
-const apiCall = (userEmail, userId) => {
-  return fetch("https://jent.ly/api/summarize", {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({url: window.location.href, html: getHTML(), email: userEmail, gaia: userId}),
-  });
-};
-
-const findFirstOccurrenceTextInHTML = (text, body) => {
-  let tag = false;
-  for (let i = 0; i < body.length - text.length + 1; i++) {
-    let body_index = i;
-    let text_index = 0;
-
-    if (body[i] === '<') tag = true;
-    else if (body[i] === '>') tag = false;
-    let saved_tag = tag;
-
-    if (tag) continue;
-    while (text_index < text.length && body_index < body.length) {
-      if (body[body_index] === '<') tag = true;
-
-      if (!tag && body[body_index] !== text[text_index]) break;
-      if (!tag) text_index++;
-
-      if (body[body_index] === '>') tag = false;
-
-      body_index++;
+// Listen for getHTML request
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+    // If the received message has the expected format...
+    if (msg.request_type === 'get_HTML') {
+        sendResponse(getHTML());
     }
-    if (text_index === text.length) return [i, body_index];
-    tag = saved_tag;
-  }
-  return []
-};
-
-const highlightText = (sentences) => {
-  let html = getHTML();
-
-  chrome.storage.sync.get({
-    color: {r: 255, g: 255, b: 0}
-  }, (items) => {
-    let color = 'rgb(' + items.color.r + ',' + items.color.g + ',' + items.color.b + ')';
-    for (let i = 0 ; i < sentences.length ; i++) {
-      let sub_sentences = sentences[i].split('\n')
-      for (let j = 0 ; j < sub_sentences.length ; j++) {
-        let indices = findFirstOccurrenceTextInHTML(sub_sentences[j], html);
-        if (indices.length === 0) {
-          console.log("Unable to find sentence \"" + sentences[i] + "\"");
-          continue;
-        }
-        html = [
-          html.slice(0, indices[0]),
-          "<b style=\"background-color: ", color, ";\">", html.slice(indices[0], indices[1]), "</b>",
-          html.slice(indices[1])
-        ].join('');
-      }
-    }
-    document.body.innerHTML = html;
-  });
-};
+});
 
 chrome.storage.sync.get({
-  'summaryDomainWhitelist': [],
-  'isSummarizerEnabled': false
-}, function(result) {
+  'color': {r: 255, g: 255, b: 0},
+  'isSummarizerEnabled': false,
+  'summaryDomainWhitelist': []
+}, function(items) {
   // do nothing if not enabled
-  if (!result.isSummarizerEnabled) {
+  if (!items.isSummarizerEnabled) {
     return;
   }
 
   // do nothing if current website is not whitelisted
-  let whitelist = new Set(result.summaryDomainWhitelist);
+  let whitelist = new Set(items.summaryDomainWhitelist);
   // eslint-disable-next-line TODO: find alternative for this? maybe chrome tabs query, no-restricted-globals
   let url = new URL(location.href);
   if (!whitelist.has(url.hostname)) {
     return;
   }
 
-  // query backend script for user info
-  chrome.runtime.sendMessage({request_type: "userInfo"}, function(response) {
-    // can be "" if user is not logged in
-    let email = response.email;
-    let id = response.id;
-    // otherwise, do the thing!
-    // code here to summarize and change style
-    apiCall(email, id).then(response => {
-      return response.json();
-    }).then(sentences => {
-      highlightText(sentences);
-    }).catch(exception => {
-      console.log(exception);
-    });
-  });
+  // kickoff highlighting routine on background script
+  let color = 'rgb(' + items.color.r + ',' + items.color.g + ',' + items.color.b + ')';
+  let highlightColor = `mark{background: ${color};}`
+  chrome.runtime.sendMessage({request_type: "highlight", highlight_color: highlightColor});
 });

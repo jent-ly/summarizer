@@ -1,6 +1,6 @@
 {
   "name": "jent.ly",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "manifest_version": 2,
   "description": "This extension provides a TL;DR and highlights important text in any website of your choice!",
   "icons": {
@@ -10,7 +10,7 @@
   },
   "default_locale": "en",
   "background": {
-    "scripts": ["js/showPageAction.js"],
+    "page": "bg/performHighlighting.html",
     "persistent": false
   },
   "page_action": {
