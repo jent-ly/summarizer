@@ -43,14 +43,6 @@
       "matches": [
         "https://*/*"
       ],
-      "js": [
-        "inject/inject.js"
-      ]
-    },
-    {
-      "matches": [
-        "https://*/*"
-      ],
       "css": [
         "css/inject.css"
       ],
