@@ -147,7 +147,8 @@ export default class Popup extends Component {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
             chrome.storage.sync.get({
               isSummarizerEnabled: false,
-            }, ({shouldReload}) => {
+            }, ({isSummarizerEnabled}) => {
+                const shouldReload = isSummarizerEnabled;
                 const url = new URL(tabs[0].url!);
                 if (this.state.hasDomain) {
                     this.addDomain(url.hostname, shouldReload);
