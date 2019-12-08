@@ -102,6 +102,10 @@ export default class Popup extends Component {
         });
         chrome.storage.sync.set({
             isSummarizerEnabled: enabled,
+        }, () => {
+            if (this.state.hasDomain) {
+                this.refreshOrUpdate(true);
+            }
         });
     }
 
@@ -141,12 +145,17 @@ export default class Popup extends Component {
             hasDomain,
         });
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
-            const url = new URL(tabs[0].url!);
-            if (this.state.hasDomain) {
-                this.addDomain(url.hostname, true);
-            } else {
-                this.removeDomain(url.hostname, true);
-            }
+            chrome.storage.sync.get({
+              isSummarizerEnabled: false,
+            }, ({isSummarizerEnabled}) => {
+                const shouldReload = isSummarizerEnabled;
+                const url = new URL(tabs[0].url!);
+                if (this.state.hasDomain) {
+                    this.addDomain(url.hostname, shouldReload);
+                } else {
+                    this.removeDomain(url.hostname, shouldReload);
+                }
+            });
         });
     }
 
