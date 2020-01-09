@@ -1,5 +1,5 @@
 /*global chrome*/
-const apiCall = (userEmail, userId, html) => {
+const apiCall = (userEmail, userId, title, text, lang) => {
   return fetch("https://jent.ly/api/summarize", {
     method: "POST",
     headers: {
@@ -8,7 +8,9 @@ const apiCall = (userEmail, userId, html) => {
     },
     body: JSON.stringify({
       url: window.location.href,
-      html: html,
+      title: title,
+      text: text,
+      lang: lang,
       email: userEmail,
       gaia: userId,
     }),
@@ -22,26 +24,34 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     chrome.identity.getProfileUserInfo(userInfo => { 
       chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         chrome.tabs.insertCSS(tabs[0].id, {code: message.highlight_color});
-        chrome.tabs.sendMessage(tabs[0].id, {request_type: 'get_HTML'}, html => {
-          apiCall(userInfo.email, userInfo.id, html).then(response => {
-            return response.json();
-          }).then(sentences => {
-            chrome.tabs.executeScript(null, { file: "bg/mark.js" }, () => {
-              chrome.tabs.executeScript(null, {code: 'var instance = new Mark(document.querySelector("body"));'});
-              sentences.forEach(sentence => {
-                console.log(sentence);
-                let markCode = `instance.mark("${sentence}", {
-                  "acrossElements": true,
-                  "caseSensitive": true,
-                  "separateWordSearch": false
-                });`;
-                chrome.tabs.executeScript(null, {code: markCode});
+        // Here we want to get the HTML
+        chrome.tabs.executeScript(null, { file: "bg/Readability.js" }, () => {
+          chrome.tabs.executeScript(null, { code: `var cleandoc = document.cloneNode(true);
+              new Readability(cleandoc).parse()` }, (ret) => {
+            var article = ret[0];
+            var div = document.createElement('div');
+            div.innerHTML = article.content;
+            var text = Array.prototype.map.call(div.getElementsByTagName('p'), (p) => { return p.innerText }).join(' ');
+            apiCall(userInfo.email, userInfo.id, article.title, text, navigator.language.substring(0, 2)).then(response => {
+              return response.json();
+            }).then(sentences => {
+              chrome.tabs.executeScript(null, { file: "bg/mark.js" }, () => {
+                chrome.tabs.executeScript(null, {code: 'var instance = new Mark(document.querySelector("body"));'});
+                sentences.forEach(sentence => {
+                  console.log(sentence);
+                  let markCode = `instance.mark("${sentence}", {
+                    "acrossElements": true,
+                    "caseSensitive": true,
+                    "separateWordSearch": false
+                  });`;
+                  chrome.tabs.executeScript(null, {code: markCode});
+                });
               });
+            }).catch(exception => {
+              // this will log into the background script environment
+              // go to: chrome://extensions/ -> Inspect views
+              console.log(exception);
             });
-          }).catch(exception => {
-            // this will log into the background script environment
-            // go to: chrome://extensions/ -> Inspect views
-            console.log(exception);
           });
         });
       });

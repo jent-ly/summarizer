@@ -1,22 +1,4 @@
 /*global chrome*/
-// gets all text without html tags
-const getText = () => {
-  return document.body.innerText;
-};
-
-// gets entire html of page
-const getHTML = () => {
-  return document.body.innerHTML;
-};
-
-// Listen for getHTML request
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    // If the received message has the expected format...
-    if (msg.request_type === 'get_HTML') {
-        sendResponse(getHTML());
-    }
-});
-
 chrome.storage.sync.get({
   'color': {r: 255, g: 255, b: 0},
   'isSummarizerEnabled': false,
