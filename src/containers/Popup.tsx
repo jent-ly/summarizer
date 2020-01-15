@@ -207,15 +207,11 @@ export default class Popup extends Component {
     // userEmail and userId can be "" if the user is not logged in
     public submitFeedbackApiCall = (score: number, description: string) => {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
-            console.log("start submitFeedbackApiCall");
             const url = tabs[0].url;
-            console.log("url: " + url);
 
             chrome.identity.getProfileUserInfo((userInfo: UserInfo) => {
                 const email = userInfo.email;
                 const gaia = userInfo.id;
-                
-                console.log("email: " + email);
 
                 return fetch("https://jent.ly/api/feedback/submit", {
                     body: JSON.stringify({url, score, description, email, gaia}),
