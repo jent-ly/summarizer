@@ -43,19 +43,6 @@
   height: 275px;
 }
 
-.summ-footer {
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  font-family: "Century Gothic", "CenturyGothic", "AppleGothic", sans-serif;
-
-  .misc-button {
-    font-size: 10px;
-    width: 50%;
-  }
-}
-
 .summ-option-container {
   margin: 0;
   padding: 0 8px;
@@ -156,6 +143,34 @@
   font-size: 12px;
   font-weight: bold;
   padding: 0;
+}
+
+.feedback-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.feedback-container-title {
+  font-size: 12px;
+  margin-top: 16px;
+  font-family: "Century Gothic", "CenturyGothic", "AppleGothic", sans-serif;
+}
+
+.feedback-container-textarea {
+  margin-bottom: 16px;
+  resize: none;
+}
+
+.feedback-button-container {
+  justify-content: space-around;
+  display: flex;
+  flex-direction: row;
+}
+
+.feedback-button {
+  max-height: 36px;
+  max-width: 36px;
 }
 
 // TODO Remove these...:

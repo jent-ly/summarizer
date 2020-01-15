@@ -205,16 +205,17 @@ export default class Popup extends Component {
     }
 
     // userEmail and userId can be "" if the user is not logged in
-    public submitFeedbackApiCall = (score: number) => {
+    public submitFeedbackApiCall = (score: number, description: string) => {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+            console.log("start submitFeedbackApiCall");
             const url = tabs[0].url;
+            console.log("url: " + url);
 
             chrome.identity.getProfileUserInfo((userInfo: UserInfo) => {
                 const email = userInfo.email;
                 const gaia = userInfo.id;
-
-                // TODO: get the following data from user input
-                const description = "";
+                
+                console.log("email: " + email);
 
                 return fetch("https://jent.ly/api/feedback/submit", {
                     body: JSON.stringify({url, score, description, email, gaia}),
@@ -230,7 +231,6 @@ export default class Popup extends Component {
 
       public render() {
         const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor } = this.state;
-        const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
         return(
             <ThemeProvider theme={this.theme}>
                 <div className="container">
@@ -261,8 +261,9 @@ export default class Popup extends Component {
                             isEnabled={isEnabled}
                             toggleDomain={this.toggleDomain}
                             toggleEnable={this.toggleEnable}
-                            whitelistToggleText={whitelistToggleText}
+                            hasDomain={hasDomain}
                             domain={domain}
+                            submitFeedbackApiCall={this.submitFeedbackApiCall}
                           />
                         </TabPanel>
                         <TabPanel value={curTab} index={1}>
@@ -279,17 +280,6 @@ export default class Popup extends Component {
                           />
                         </TabPanel>
                     </SwipeableViews>
-                    <div className="summ-footer">
-                        <p>How is the summary?</p>
-                        <Button className="misc-button" size="small" color="default"
-                            onClick={(event) => this.submitFeedbackApiCall(0)}>
-                            Awful
-                        </Button>
-                        <Button className="misc-button" size="small" color="secondary"
-                            onClick={(event) => this.submitFeedbackApiCall(1)}>
-                            Great
-                        </Button>
-                    </div>
                 </div>
             </ThemeProvider>
         );
