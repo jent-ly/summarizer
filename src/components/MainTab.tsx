@@ -1,11 +1,10 @@
 import Button from "@material-ui/core/Button";
-import Fab from "@material-ui/core/Fab";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
-import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
 import React, { Component } from "react";
+import thumbsUp from "../img/thumbs-up.png";
+import thumbsDown from "../img/thumbs-down.png";
 
 interface IMainTabProps {
     isEnabled: boolean;
@@ -13,14 +12,15 @@ interface IMainTabProps {
     toggleEnable: () => void;
     hasDomain: boolean;
     domain: string;
-    submitFeedbackApiCall: (score: number, description: string) => void;
+    submitFeedback: (score: number, description: string) => void;
+    feedbackSent: boolean;
 }
 
 export default class MainTab extends Component<IMainTabProps, {}>  {
     private defaultFeedbackText = "Optionally tell us why :)";
     
     public state = {
-        feedbackText: "",
+        feedbackText: ""
     };
 
     public handleChange = (event: any) => {
@@ -28,7 +28,8 @@ export default class MainTab extends Component<IMainTabProps, {}>  {
     }
 
     public render() {
-        const { isEnabled, toggleDomain, toggleEnable, hasDomain, domain, submitFeedbackApiCall } = this.props;
+        const { isEnabled, toggleDomain, toggleEnable, hasDomain, domain, submitFeedback, feedbackSent } = this.props;
+        console.log('feedbacksent: ', feedbackSent);
         const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
         return (
             <FormGroup className="summ-option-container">
@@ -53,25 +54,42 @@ export default class MainTab extends Component<IMainTabProps, {}>  {
                         {`"${domain}"`}
                     </div>
                 </Button>
-
-                { hasDomain && isEnabled &&
                 <div className="feedback-container">
-                    <div className="feedback-container-title">How is the summary on this site?</div>
-
-                    <textarea className="feedback-container-textarea" name="feedbackdescription" placeholder={this.defaultFeedbackText} value={this.state.feedbackText} onChange={this.handleChange} cols={25} rows={5} />
-
-                    <div className="feedback-button-container">
-                        <Fab className="feedback-button" color="default"
-                            onClick={(event) => submitFeedbackApiCall(1, this.state.feedbackText)}>
-                            <ThumbUpIcon />
-                        </Fab>
-                        <Fab className="feedback-button" color="secondary"
-                            onClick={(event) => submitFeedbackApiCall(0, this.state.feedbackText)}>
-                            <ThumbDownIcon />
-                        </Fab>
+                { hasDomain && isEnabled && !feedbackSent &&
+                    <>
+                    <div className="feedback-container-title">
+                        How is the summary on this site?
                     </div>
-                </div>
+                    <textarea
+                        className="feedback-container-textarea"
+                        name="feedbackdescription"
+                        placeholder={this.defaultFeedbackText}
+                        value={this.state.feedbackText}
+                        onChange={this.handleChange}
+                        cols={25}
+                        rows={4} />
+                    <div className="feedback-button-container">
+                        <Button
+                            className="feedback-button"
+                            color="secondary"
+                            onClick={(event) => submitFeedback(1, this.state.feedbackText)}>
+                            <img className="feedback-button-icon" src={thumbsUp} alt="thumbs-up"/>
+                        </Button>
+                        <Button
+                            className="feedback-button"
+                            color="secondary"
+                            onClick={(event) => submitFeedback(0, this.state.feedbackText)}>
+                            <img className="feedback-button-icon" src={thumbsDown} alt="thumbs-down"/>
+                        </Button>
+                    </div>
+                    </>
                 }
+                { feedbackSent &&
+                    <div className="feedback-confirm">
+                        Thanks for your feedback!
+                    </div>
+                }
+                </div>
             </FormGroup>
         );
     }

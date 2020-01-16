@@ -33,6 +33,7 @@ export default class Popup extends Component {
         },
         isEnabled: false,
         whitelist: [],
+        feedbackSent: false
     };
 
     public theme = createMuiTheme({
@@ -205,11 +206,14 @@ export default class Popup extends Component {
     }
 
     // userEmail and userId can be "" if the user is not logged in
-    public submitFeedbackApiCall = (score: number, description: string) => {
+    public submitFeedback = (score: number, description: string) => {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
             const url = tabs[0].url;
-
+            this.setState({
+                feedbackSent: true,
+            });
             chrome.identity.getProfileUserInfo((userInfo: UserInfo) => {
+                console.log('get profile user info: ', userInfo);
                 const email = userInfo.email;
                 const gaia = userInfo.id;
 
@@ -226,7 +230,7 @@ export default class Popup extends Component {
       }
 
       public render() {
-        const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor } = this.state;
+        const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor, feedbackSent } = this.state;
         return(
             <ThemeProvider theme={this.theme}>
                 <div className="container">
@@ -259,7 +263,8 @@ export default class Popup extends Component {
                             toggleEnable={this.toggleEnable}
                             hasDomain={hasDomain}
                             domain={domain}
-                            submitFeedbackApiCall={this.submitFeedbackApiCall}
+                            submitFeedback={this.submitFeedback}
+                            feedbackSent={feedbackSent}
                           />
                         </TabPanel>
                         <TabPanel value={curTab} index={1}>
