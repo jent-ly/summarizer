@@ -3,8 +3,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
 import React, { Component } from "react";
-import thumbsUp from "../img/thumbs-up.png";
 import thumbsDown from "../img/thumbs-down.png";
+import thumbsUp from "../img/thumbs-up.png";
 
 interface IMainTabProps {
     isEnabled: boolean;
@@ -17,11 +17,11 @@ interface IMainTabProps {
 }
 
 export default class MainTab extends Component<IMainTabProps, {}>  {
-    private defaultFeedbackText = "Optionally tell us why :)";
-    
+
     public state = {
-        feedbackText: ""
+        feedbackText: "",
     };
+    private defaultFeedbackText = "Optionally tell us why :)";
 
     public handleChange = (event: any) => {
         this.setState({feedbackText: event.target.value});
@@ -29,7 +29,6 @@ export default class MainTab extends Component<IMainTabProps, {}>  {
 
     public render() {
         const { isEnabled, toggleDomain, toggleEnable, hasDomain, domain, submitFeedback, feedbackSent } = this.props;
-        console.log('feedbacksent: ', feedbackSent);
         const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
         return (
             <FormGroup className="summ-option-container">
