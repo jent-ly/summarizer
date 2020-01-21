@@ -1,6 +1,6 @@
 /*global chrome*/
 const apiCall = (userEmail, userId, title, text, lang) => {
-  return fetch("https://jent.ly/api/summarize", {
+  return fetch("https://api.jent.ly/v1/summarize", {
     method: "POST",
     headers: {
       "Accept": "application/json",
