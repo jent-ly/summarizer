@@ -213,11 +213,12 @@ export default class Popup extends Component {
                 feedbackSent: true,
             });
             chrome.identity.getProfileUserInfo((userInfo: UserInfo) => {
-                console.log('get profile user info: ', userInfo);
-                const email = userInfo.email;
-                const gaia = userInfo.id;
+                // TODO: let users opt-in to sending their email address
+                // TODO: figure out why fetch times out when sending the email and gaia
+                const email = "";               // TODO: userInfo.email;
+                const gaia = "";                // TODO: userInfo.id;
 
-                return fetch("https://jent.ly/api/feedback/submit", {
+                return fetch("https://f12bf389.ngrok.io/api/feedback/submit", {
                     body: JSON.stringify({url, score, description, email, gaia}),
                     headers: {
                         "Accept": "application/json",
