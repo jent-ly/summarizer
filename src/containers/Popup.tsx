@@ -217,7 +217,7 @@ export default class Popup extends Component {
                 const email = "";               // TODO: userInfo.email;
                 const gaia = "";                // TODO: userInfo.id;
 
-                return fetch("https://f12bf389.ngrok.io/api/feedback/submit", {
+                return fetch("https://api.jent.ly/v1/feedback/submit", {
                     body: JSON.stringify({url, score, description, email, gaia}),
                     headers: {
                         "Accept": "application/json",
