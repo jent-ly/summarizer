@@ -1,8 +1,8 @@
 {
   "name": "jent.ly",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "manifest_version": 2,
-  "description": "This extension provides a TL;DR and highlights important text in any website of your choice!",
+  "description": "The Jent.ly Summarizer seamlessly provides a highlighted summary of your web content to save your time and attention.",
   "icons": {
     "16": "icons/jent-icon-128.png",
     "48": "icons/jent-icon-128.png",
