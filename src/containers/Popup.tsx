@@ -1,11 +1,12 @@
 /*global chrome*/
 // Material UI
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
 import { createMuiTheme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import { ThemeProvider } from "@material-ui/styles";
+// @ts-ignore
+import { UserInfo } from "chrome/identity/UserInfo";
 // @ts-ignore
 import { Tab as ChromeTab } from "chrome/tabs/Tab";
 import React, { Component } from "react";
@@ -23,6 +24,7 @@ export default class Popup extends Component {
     public state = {
         curTab: 0,
         domain: "",
+        feedbackSent: false,
         hasDomain: false,
         highlightColor: {
             b: 0,
@@ -202,9 +204,35 @@ export default class Popup extends Component {
         this.updateState();
     }
 
-    public render() {
-        const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor } = this.state;
-        const whitelistToggleText = (hasDomain ? `Remove` : `Add`) + " Domain";
+    // userEmail and userId can be "" if the user is not logged in
+    public submitFeedback = (score: number, description: string) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+            const url = tabs[0].url;
+            this.setState({
+                feedbackSent: true,
+            });
+            chrome.identity.getProfileUserInfo((userInfo: UserInfo) => {
+                // TODO: let users opt-in to sending their email address
+                // TODO: figure out why fetch times out when sending the email and gaia
+                const email = "";               // TODO: userInfo.email;
+                const gaia = "";                // TODO: userInfo.id;
+
+                const cleanUrl = url.substr(0, url.indexOf("?"));
+
+                return fetch("https://api.jent.ly/v1/feedback/submit", {
+                    body: JSON.stringify({cleanUrl, score, description, email, gaia}),
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                });
+            });
+        });
+      }
+
+      public render() {
+        const { domain, hasDomain, isEnabled, curTab, whitelist, highlightColor, feedbackSent } = this.state;
         return(
             <ThemeProvider theme={this.theme}>
                 <div className="container">
@@ -235,8 +263,10 @@ export default class Popup extends Component {
                             isEnabled={isEnabled}
                             toggleDomain={this.toggleDomain}
                             toggleEnable={this.toggleEnable}
-                            whitelistToggleText={whitelistToggleText}
+                            hasDomain={hasDomain}
                             domain={domain}
+                            submitFeedback={this.submitFeedback}
+                            feedbackSent={feedbackSent}
                           />
                         </TabPanel>
                         <TabPanel value={curTab} index={1}>
@@ -253,10 +283,6 @@ export default class Popup extends Component {
                           />
                         </TabPanel>
                     </SwipeableViews>
-                    <div className="summ-footer">
-                        <Button className="misc-button" size="small" color="secondary">Donate</Button>
-                        <Button className="misc-button" size="small" color="secondary">Feedback</Button>
-                    </div>
                 </div>
             </ThemeProvider>
         );
