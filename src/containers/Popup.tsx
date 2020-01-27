@@ -217,7 +217,7 @@ export default class Popup extends Component {
                 const email = "";               // TODO: userInfo.email;
                 const gaia = "";                // TODO: userInfo.id;
 
-                const cleanUrl = url.substr(0, url.indexOf("?"));
+                const cleanUrl = url.substr(0, url.indexOf("?") === -1 ? url.length : url.indexOf("?"));
 
                 return fetch("https://api.jent.ly/v1/feedback/submit", {
                     body: JSON.stringify({cleanUrl, score, description, email, gaia}),
