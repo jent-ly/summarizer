@@ -207,7 +207,7 @@ export default class Popup extends Component {
     // userEmail and userId can be "" if the user is not logged in
     public submitFeedback = (score: number, description: string) => {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
-            const url = tabs[0].url;
+            const rawUrl = tabs[0].url;
             this.setState({
                 feedbackSent: true,
             });
@@ -217,10 +217,10 @@ export default class Popup extends Component {
                 const email = "";               // TODO: userInfo.email;
                 const gaia = "";                // TODO: userInfo.id;
 
-                const cleanUrl = url.substr(0, url.indexOf("?") === -1 ? url.length : url.indexOf("?"));
+                const url = rawUrl.substr(0, rawUrl.indexOf("?") === -1 ? rawUrl.length : rawUrl.indexOf("?"));
 
                 return fetch("https://api.jent.ly/v1/feedback/submit", {
-                    body: JSON.stringify({cleanUrl, score, description, email, gaia}),
+                    body: JSON.stringify({url, score, description, email, gaia}),
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
