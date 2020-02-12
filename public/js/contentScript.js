@@ -13,11 +13,9 @@ chrome.storage.sync.get({
   let whitelist = new Set(items.summaryDomainWhitelist);
   // eslint-disable-next-line TODO: find alternative for this? maybe chrome tabs query, no-restricted-globals
   let url = new URL(location.href);
-  console.log('contentScript', url.hostname, whitelist);
   if (!whitelist.has(url.hostname)) {
     return;
   }
-  console.log('contentScript highlighting');
   // kickoff highlighting routine on background script
   let color = 'rgb(' + items.color.r + ',' + items.color.g + ',' + items.color.b + ')';
   let highlightColor = `mark{background: ${color};}`
