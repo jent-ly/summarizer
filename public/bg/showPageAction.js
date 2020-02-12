@@ -10,5 +10,17 @@ function checkForValidUrl(tabId, changeInfo, tab) {
   }
 };
 
+function redirectToGettingStartedPage() {
+  chrome.tabs.create({
+    url: "https://jent.ly/gettingstarted/",
+    active: true
+  });
+
+  return false;
+};
+
 // Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
+
+// Listen for when the user installs the extension.
+chrome.runtime.onInstalled.addListener(redirectToGettingStartedPage);
