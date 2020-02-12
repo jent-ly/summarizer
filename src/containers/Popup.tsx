@@ -11,11 +11,12 @@ import { UserInfo } from "chrome/identity/UserInfo";
 import { Tab as ChromeTab } from "chrome/tabs/Tab";
 import React, { Component } from "react";
 import SwipeableViews from "react-swipeable-views";
-// Style + Util
+// Util
+import { defaultDomains } from "../common/util";
+// Components
 import ListTab from "../components/ListTab";
 import MainTab from "../components/MainTab";
 import OptionsTab from "../components/OptionsTab";
-// Components
 import TabPanel from "../components/TabPanel";
 import "../css/popup.scss";
 import logo from "../img/v1.5-1000x220.png";
@@ -32,7 +33,7 @@ export default class Popup extends Component {
             r: 255,
         },
         isEnabled: false,
-        whitelist: [],
+        whitelist: defaultDomains,
     };
 
     public theme = createMuiTheme({
@@ -113,7 +114,7 @@ export default class Popup extends Component {
 
     public addDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: [],
+            summaryDomainWhitelist: defaultDomains,
         }, ({summaryDomainWhitelist}) => {
             const whitelist = new Set(summaryDomainWhitelist);
             whitelist.add(domain);
@@ -128,7 +129,7 @@ export default class Popup extends Component {
 
     public removeDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: [],
+            summaryDomainWhitelist: defaultDomains,
         }, ({summaryDomainWhitelist}) => {
             const whitelist = new Set(summaryDomainWhitelist);
             whitelist.delete(domain);
@@ -148,7 +149,7 @@ export default class Popup extends Component {
         });
         chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
             chrome.storage.sync.get({
-              isSummarizerEnabled: false,
+              isSummarizerEnabled: true,
             }, ({isSummarizerEnabled}) => {
                 const shouldReload = isSummarizerEnabled;
                 const url = new URL(tabs[0].url!);
@@ -178,8 +179,8 @@ export default class Popup extends Component {
                 g: 255,
                 r: 255,
             },
-            isSummarizerEnabled: false,
-            summaryDomainWhitelist: [],
+            isSummarizerEnabled: true,
+            summaryDomainWhitelist: defaultDomains,
         }, (storage) => {
             const {summaryDomainWhitelist, isSummarizerEnabled: isEnabled, color: highlightColor} = storage;
             const whitelist = new Set (summaryDomainWhitelist);
