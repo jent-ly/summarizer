@@ -20,7 +20,6 @@ import "../css/popup.scss";
 import logo from "../img/v1.5-1000x220.png";
 
 export default class Popup extends Component {
-    private activeCurrentTab = {active: true, currentWindow: true};
     public state = {
         curTab: 0,
         domain: "",
@@ -69,6 +68,8 @@ export default class Popup extends Component {
         },
     });
 
+    private activeCurrentTab = {active: true, currentWindow: true};
+
     public a11yProps = (index: number) => {
       return {
         "aria-controls": `nav-tabpanel-${index}`,
@@ -113,8 +114,8 @@ export default class Popup extends Component {
 
     public addDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: [],
             removedDomains: [],
+            summaryDomainWhitelist: [],
         }, ({summaryDomainWhitelist, removedDomains}) => {
             const whitelist = new Set(summaryDomainWhitelist);
             const removed = new Set(removedDomains);
@@ -122,8 +123,8 @@ export default class Popup extends Component {
             removed.delete(domain);
             chrome.storage.sync.set({
                 // @ts-ignore - spread operator on Set
-                summaryDomainWhitelist: [...whitelist],
                 removedDomains: [...removed],
+                summaryDomainWhitelist: [...whitelist],
             }, () => {
                 this.refreshOrUpdate(refresh);
             });
@@ -132,8 +133,8 @@ export default class Popup extends Component {
 
     public removeDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: [],
             removedDomains: [],
+            summaryDomainWhitelist: [],
         }, ({summaryDomainWhitelist, removedDomains}) => {
             const whitelist = new Set(summaryDomainWhitelist);
             const removed = new Set(removedDomains);
@@ -141,8 +142,8 @@ export default class Popup extends Component {
             removed.add(domain);
             chrome.storage.sync.set({
                 // @ts-ignore - spread operator on Set
-                summaryDomainWhitelist: [...whitelist],
                 removedDomains: [...removed],
+                summaryDomainWhitelist: [...whitelist],
             }, () => {
                 this.refreshOrUpdate(refresh);
             });
