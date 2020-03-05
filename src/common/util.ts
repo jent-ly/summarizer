@@ -1,1 +1,0 @@
-export const defaultDomains = ['www.nytimes.com', 'www.cnn.com', 'www.huffpost.com', 'www.huffingtonpost.ca'];

@@ -11,8 +11,6 @@ import { UserInfo } from "chrome/identity/UserInfo";
 import { Tab as ChromeTab } from "chrome/tabs/Tab";
 import React, { Component } from "react";
 import SwipeableViews from "react-swipeable-views";
-// Util
-import { defaultDomains } from "../common/util";
 // Components
 import ListTab from "../components/ListTab";
 import MainTab from "../components/MainTab";
@@ -22,6 +20,7 @@ import "../css/popup.scss";
 import logo from "../img/v1.5-1000x220.png";
 
 export default class Popup extends Component {
+    private activeCurrentTab = {active: true, currentWindow: true};
     public state = {
         curTab: 0,
         domain: "",
@@ -33,7 +32,7 @@ export default class Popup extends Component {
             r: 255,
         },
         isEnabled: false,
-        whitelist: defaultDomains,
+        whitelist: [],
     };
 
     public theme = createMuiTheme({
@@ -91,7 +90,7 @@ export default class Popup extends Component {
 
     public refreshOrUpdate = (refresh?: boolean) => {
         if (refresh) {
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+            chrome.tabs.query(this.activeCurrentTab, (tabs: ChromeTab[]) => {
                 chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
             });
         }
@@ -114,13 +113,17 @@ export default class Popup extends Component {
 
     public addDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: defaultDomains,
-        }, ({summaryDomainWhitelist}) => {
+            summaryDomainWhitelist: [],
+            removedDomains: [],
+        }, ({summaryDomainWhitelist, removedDomains}) => {
             const whitelist = new Set(summaryDomainWhitelist);
+            const removed = new Set(removedDomains);
             whitelist.add(domain);
+            removed.delete(domain);
             chrome.storage.sync.set({
                 // @ts-ignore - spread operator on Set
                 summaryDomainWhitelist: [...whitelist],
+                removedDomains: [...removed],
             }, () => {
                 this.refreshOrUpdate(refresh);
             });
@@ -129,13 +132,17 @@ export default class Popup extends Component {
 
     public removeDomain = (domain: string, refresh?: boolean) => {
         chrome.storage.sync.get({
-            summaryDomainWhitelist: defaultDomains,
-        }, ({summaryDomainWhitelist}) => {
+            summaryDomainWhitelist: [],
+            removedDomains: [],
+        }, ({summaryDomainWhitelist, removedDomains}) => {
             const whitelist = new Set(summaryDomainWhitelist);
+            const removed = new Set(removedDomains);
             whitelist.delete(domain);
+            removed.add(domain);
             chrome.storage.sync.set({
                 // @ts-ignore - spread operator on Set
                 summaryDomainWhitelist: [...whitelist],
+                removedDomains: [...removed],
             }, () => {
                 this.refreshOrUpdate(refresh);
             });
@@ -147,7 +154,7 @@ export default class Popup extends Component {
         this.setState({
             hasDomain,
         });
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+        chrome.tabs.query(this.activeCurrentTab, (tabs: ChromeTab[]) => {
             chrome.storage.sync.get({
               isSummarizerEnabled: true,
             }, ({isSummarizerEnabled}) => {
@@ -166,7 +173,7 @@ export default class Popup extends Component {
         chrome.storage.sync.set({
             color: newColor,
         }, () => {
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+            chrome.tabs.query(this.activeCurrentTab, (tabs: ChromeTab[]) => {
                 this.refreshOrUpdate(this.state.hasDomain);
             });
         });
@@ -180,11 +187,11 @@ export default class Popup extends Component {
                 r: 255,
             },
             isSummarizerEnabled: true,
-            summaryDomainWhitelist: defaultDomains,
+            summaryDomainWhitelist: [],
         }, (storage) => {
             const {summaryDomainWhitelist, isSummarizerEnabled: isEnabled, color: highlightColor} = storage;
             const whitelist = new Set (summaryDomainWhitelist);
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+            chrome.tabs.query(this.activeCurrentTab, (tabs: ChromeTab[]) => {
                 let hasDomain = false;
                 const {hostname: domain} = new URL(tabs[0].url!);
                 if (whitelist.has(domain)) {
@@ -207,7 +214,7 @@ export default class Popup extends Component {
 
     // userEmail and userId can be "" if the user is not logged in
     public submitFeedback = (score: number, description: string) => {
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs: ChromeTab[]) => {
+        chrome.tabs.query(this.activeCurrentTab, (tabs: ChromeTab[]) => {
             const rawUrl = tabs[0].url;
             this.setState({
                 feedbackSent: true,
